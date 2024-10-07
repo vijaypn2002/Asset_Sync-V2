@@ -1,0 +1,159 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Exit Tracker{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --primary-color: #01508c;
+        --secondary-color: #ffc814;
+        --light-blue-color: #e9f7ff;
+        --text-color: #333;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--light-blue-color);
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin: 0 auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        min-width: 600px;
+    }
+
+    table th, table td {
+        padding: 12px 15px;
+        text-align: left;
+        color: var(--text-color);
+    }
+
+    table th {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    table tr {
+        border-bottom: 1px solid #dddddd;
+    }
+
+    table tr:nth-of-type(even) {
+        background-color: var(--light-blue-color);
+    }
+
+    table tr:last-of-type {
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    table td form button {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    table td form button:hover {
+        background-color: var(--secondary-color);
+    }
+
+    /* Mobile Styles */
+    @media screen and (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        .table-container {
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        table th, table td {
+            padding: 10px 8px;
+        }
+    }
+</style>
+
+<h2>Exited Employees</h2>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Date of Joining</th>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Branch</th>
+                <th>Work Location</th>
+                <th>Reporting Officer</th>
+                <th>Personal Email ID</th>
+                <th>Actions</th> <!-- New column for actions -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in exited_employees %}
+            <tr>
+                <td>{{ employee.date_of_joining }}</td>
+                <td>{{ employee.employee_id }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.department }}</td>
+                <td>{{ employee.designation }}</td>
+                <td>{{ employee.branch }}</td>
+                <td>{{ employee.work_location }}</td>
+                <td>{{ employee.reporting_officer }}</td>
+                <td>{{ employee.personal_email_id }}</td>
+                <td>
+                    <form action="{% url 'restore_employee' employee.employee_id %}" method="post" onsubmit="return confirmRestore('{{ employee.employee_id }}');">
+                        {% csrf_token %}
+                        <button type="submit">Restore</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10">No exited employees found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function confirmRestore(employeeId) {
+        return confirm('Do you want to restore this employee with ID "' + employeeId + '"?');
+    }
+</script>
+
+{% endblock %}

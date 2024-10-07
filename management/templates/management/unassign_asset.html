@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Unassign Asset</h1>
+<h2>Unassign {{ asset.brand }} - {{ asset.serial_number }} from Employee</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <p>Are you sure you want to unassign this asset?</p>
+    <button type="submit">Yes, Unassign</button>
+    <a href="{% url 'assigned_assets' %}">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add Rental Asset{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fb;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #333;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    input, select, textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 0.95rem;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button[type="submit"] {
+        display: block;
+        width: 100%;
+        max-width: 150px;
+        margin: 20px auto;
+        padding: 10px;
+        background-color: #004a8f;
+        color: #ffffff;
+        border: none;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #003a6d;
+        transform: translateY(-2px);
+    }
+
+    button[type="submit"]:active {
+        background-color: #002c50;
+        transform: translateY(0);
+    }
+
+    /* Styling for Textarea */
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+</style>
+
+<div class="container">
+    <h2>Add Rental Asset</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-grid">
+            <!-- Fields for Rental Asset Information -->
+            <div class="form-group">
+                <label for="asset_name">Asset Name:</label>
+                <input type="text" id="asset_name" name="asset_name" placeholder="Enter Asset Name">
+            </div>
+            <div class="form-group">
+                <label for="rental_company">Rental Company:</label>
+                <input type="text" id="rental_company" name="rental_company" placeholder="Enter Rental Company Name">
+            </div>
+            <div class="form-group">
+                <label for="rental_start_date">Rental Start Date:</label>
+                <input type="date" id="rental_start_date" name="rental_start_date">
+            </div>
+            <div class="form-group">
+                <label for="rental_end_date">Rental End Date:</label>
+                <input type="date" id="rental_end_date" name="rental_end_date">
+            </div>
+            <div class="form-group">
+                <label for="rental_cost">Rental Cost:</label>
+                <input type="text" id="rental_cost" name="rental_cost" placeholder="Enter Rental Cost">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label for="remarks">Remarks:</label>
+                <textarea id="remarks" name="remarks" placeholder="Enter any remarks"></textarea>
+            </div>
+        </div>
+        <button type="submit">Save</button>
+    </form>
+</div>
+{% endblock %}

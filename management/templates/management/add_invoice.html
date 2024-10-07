@@ -1,0 +1,200 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add Invoice{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="compact-header">
+        <h1 class="text-left">Add Invoice</h1>
+    </header>
+    <div class="invoice-form-container">
+        <form id="invoiceForm" method="post" enctype="multipart/form-data" class="form-styled">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_requested_date">Requested Date:</label>
+                {{ form.requested_date }}
+            </div>
+            <div class="form-group">
+                <label for="id_purchase_date">Purchase Date:</label>
+                {{ form.purchase_date }}
+            </div>
+            <div class="form-group">
+                <label for="id_product">Product:</label>
+                {{ form.product }}
+            </div>
+            <div class="form-group">
+                <label for="id_vendor">Vendor:</label>
+                {{ form.vendor }}
+            </div>
+            <div class="form-group">
+                <label for="id_quantity">Quantity:</label>
+                {{ form.quantity }}
+            </div>
+            <div class="form-group">
+                <label for="id_payment_method">Payment Method:</label>
+                {{ form.payment_method }}
+            </div>
+            <div class="form-group">
+                <label for="id_payment_type">Payment Type:</label>
+                {{ form.payment_type }}
+            </div>
+            <div class="form-group">
+                <label for="id_amount">Amount:</label>
+                {{ form.amount }}
+            </div>
+            <div class="form-group">
+                <label for="id_status">Status:</label>
+                {{ form.status }}
+            </div>
+            <div class="form-group">
+                <label for="id_reference_transaction_id">Reference Transaction ID:</label>
+                {{ form.reference_transaction_id }}
+            </div>
+            <div class="form-group">
+                <label for="id_invoice_number">Invoice Number:</label>
+                {{ form.invoice_number }}
+            </div>
+            <div class="form-group">
+                <label for="id_next_payment_date">Next Payment Date:</label>
+                {{ form.next_payment_date }}
+            </div>
+            <div class="form-group">
+                <label for="id_department">Department:</label>
+                {{ form.department }}
+            </div>
+            <div class="form-group">
+                <label for="id_invoice_file">Upload Invoice:</label>
+                {{ form.invoice_file }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">Save</button>
+        </form>
+
+        <form method="post" action="{% url 'bulk_upload' %}" enctype="multipart/form-data" class="bulk-upload-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_csv_file">Upload CSV for Bulk Invoices:</label>
+                <input type="file" name="csv_file" id="id_csv_file" accept=".csv" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-bulk-upload">Bulk Upload</button>
+        </form>
+    </div>
+</div>
+
+<!-- CSS for compact header and sidebar scroll -->
+<style>
+    /* Compact header */
+    .compact-header {
+        background-color: #ffffff;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+        font-size: 18px;
+        border-bottom: 2px solid #ffffff;
+    }
+
+    .compact-header h1 {
+        font-size: 18px;
+        margin: 0;
+        padding-left: 15px;
+    }
+
+    /* Ensure sidebar is not covered */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 1;
+        overflow-y: auto;
+        background-color: #2c3e50;
+    }
+
+    .invoice-form-container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+
+    .form-styled {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #35424a;
+        font-weight: bold;
+    }
+
+    .form-group input, .form-group select {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        transition: border 0.3s ease;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+        border-color: #3498db;
+        background-color: #fff;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-3px);
+    }
+
+    .btn-success {
+        background-color: #2ecc71;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #27ae60;
+        transform: translateY(-3px);
+    }
+
+    /* Adjustments for responsiveness */
+    @media (max-width: 768px) {
+        .form-styled {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- JavaScript for date sync -->
+<script>
+    function syncDates() {
+        const purchaseDateInput = document.querySelector('input[name="purchase_date"]');
+        const nextPaymentDateInput = document.querySelector('input[name="next_payment_date"]');
+        purchaseDateInput.addEventListener('change', function() {
+            nextPaymentDateInput.value = purchaseDateInput.value;
+        });
+    }
+    document.addEventListener('DOMContentLoaded', syncDates);
+</script>
+{% endblock %}

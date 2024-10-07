@@ -1,0 +1,309 @@
+{% extends 'management/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Employee & Asset Overview by Branch & Department</h2>
+
+    <!-- Counters Section -->
+    <div class="counter-section">
+        <div class="counter-box">
+            <h3>Total Employees</h3>
+            <p>{{ total_employees }}</p>
+        </div>
+        <div class="counter-box">
+            <h3>Total Assets</h3>
+            <p>{{ total_assets }}</p>
+        </div>
+        <div class="counter-box">
+            <h3>Assigned Assets</h3>
+            <p>{{ assigned_assets_count }}</p>
+        </div>
+    </div>
+
+    <!-- Charts Section with Different Types -->
+    <div class="chart-section">
+        <!-- Branch-wise Employee Distribution - Bar Chart -->
+        <div class="chart-container">
+            <h3 class="chart-title">Branch-wise Employee Distribution (Bar)</h3>
+            <canvas id="branchEmployeeBarChart"></canvas>
+        </div>
+
+        <!-- Department-wise Employee Distribution - Pie Chart -->
+        <div class="chart-container">
+            <h3 class="chart-title">Department-wise Employee Distribution (Pie)</h3>
+            <canvas id="departmentEmployeePieChart"></canvas>
+        </div>
+
+        <!-- Branch-wise Asset Distribution - Line Chart -->
+        <div class="chart-container">
+            <h3 class="chart-title">Branch-wise Asset Distribution (Line)</h3>
+            <canvas id="branchAssetLineChart"></canvas>
+        </div>
+
+        <!-- Department-wise Asset Distribution - Lollipop Chart -->
+        <div class="chart-container">
+            <h3 class="chart-title">Department-wise Asset Distribution (Lollipop)</h3>
+            <canvas id="departmentAssetLollipopChart"></canvas>
+        </div>
+
+        <!-- Assigned Assets by Department - Doughnut Chart -->
+        <div class="chart-container">
+            <h3 class="chart-title">Assigned Assets by Department (Doughnut)</h3>
+            <canvas id="assignedAssetDepartmentDoughnutChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const branchEmployeeLabels = {{ branch_employee_labels|safe }};
+    const branchEmployeeData = {{ branch_employee_values|safe }};
+    const departmentEmployeeLabels = {{ department_employee_labels|safe }};
+    const departmentEmployeeData = {{ department_employee_values|safe }};
+
+    const branchAssetLabels = {{ branch_labels|safe }};
+    const branchAssetData = {{ branch_values|safe }};
+    const departmentAssetLabels = {{ department_labels|safe }};
+    const departmentAssetData = {{ department_values|safe }};
+
+    const assignedDepartmentLabels = {{ assigned_department_labels|safe }};
+    const assignedDepartmentData = {{ assigned_department_values|safe }};
+
+    // Define a more vibrant color scheme
+    const vibrantColors = [
+        'rgba(75, 192, 192, 0.8)',
+        'rgba(255, 159, 64, 0.8)',
+        'rgba(255, 99, 132, 0.8)',
+        'rgba(54, 162, 235, 0.8)',
+        'rgba(153, 102, 255, 0.8)',
+        'rgba(255, 205, 86, 0.8)',
+    ];
+
+    // Branch-wise Employee Distribution - Bar Chart
+    new Chart(document.getElementById('branchEmployeeBarChart'), {
+        type: 'bar',
+        data: {
+            labels: branchEmployeeLabels,
+            datasets: [{
+                label: 'Employee Count',
+                data: branchEmployeeData,
+                backgroundColor: vibrantColors,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: '#e0e0e0' } }
+            }
+        }
+    });
+
+    // Department-wise Employee Distribution - Pie Chart
+    new Chart(document.getElementById('departmentEmployeePieChart'), {
+        type: 'pie',
+        data: {
+            labels: departmentEmployeeLabels,
+            datasets: [{
+                data: departmentEmployeeData,
+                backgroundColor: vibrantColors,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // Branch-wise Asset Distribution - Line Chart
+    new Chart(document.getElementById('branchAssetLineChart'), {
+        type: 'line',
+        data: {
+            labels: branchAssetLabels,
+            datasets: [{
+                label: 'Asset Count',
+                data: branchAssetData,
+                borderColor: 'rgba(54, 162, 235, 0.8)',
+                fill: false,
+                tension: 0.3, // Smooth curves
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: '#e0e0e0' } }
+            }
+        }
+    });
+
+    // Department-wise Asset Distribution - Lollipop Chart (bar with small dots on top)
+    new Chart(document.getElementById('departmentAssetLollipopChart'), {
+        type: 'bar',
+        data: {
+            labels: departmentAssetLabels,
+            datasets: [{
+                label: 'Asset Count',
+                data: departmentAssetData,
+                backgroundColor: 'rgba(153, 102, 255, 0.8)',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function(value) {
+                            return value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Assigned Assets by Department - Doughnut Chart
+    new Chart(document.getElementById('assignedAssetDepartmentDoughnutChart'), {
+        type: 'doughnut',
+        data: {
+            labels: assignedDepartmentLabels,
+            datasets: [{
+                label: 'Assigned Asset Count',
+                data: assignedDepartmentData,
+                backgroundColor: vibrantColors,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
+
+<style>
+    .dashboard-container {
+        padding: 30px;
+        background-color: #f4f7fc;
+        border-radius: 15px;
+        margin-top: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: bold;
+        color: #01508c;
+        margin-bottom: 30px;
+    }
+
+    .counter-section {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+
+    .counter-box {
+        width: 30%;
+        text-align: center;
+        background-color: #ffffff;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .counter-box h3 {
+        font-size: 20px;
+        color: #01508c;
+        margin-bottom: 10px;
+    }
+
+    .counter-box p {
+        font-size: 32px;
+        font-weight: bold;
+        color: #333333;
+    }
+
+    .chart-section {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+    .chart-container {
+        width: 48%;
+        height: 320px;
+        background-color: #ffffff;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333333;
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 768px) {
+        .counter-section {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .counter-box {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 280px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dashboard-title {
+            font-size: 22px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+        }
+
+        .chart-container {
+            height: 240px;
+        }
+    }
+</style>
+
+{% endblock %}
+
+"dashboard.html"

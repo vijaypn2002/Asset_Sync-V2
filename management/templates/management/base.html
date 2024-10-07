@@ -1,0 +1,370 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AssetSync{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Color Theme Variables */
+        :root {
+            --primary-color: #01508c;
+            --secondary-color: #ffc814;
+            --light-blue-color: #e9f7ff;
+            --white-color: #ffffff;
+            --text-color: #333333;
+            --line-color: rgba(255, 255, 255, 0.3);
+            --collapsed-width: 50px;
+            --expanded-width: 200px;
+            --dropdown-bg-color: #ffffff;
+            --dropdown-hover-bg-color: #f1f1f1;
+            --dropdown-border-color: #e0e0e0;
+        }
+
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-blue-color);
+            color: var(--text-color);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white-color);
+            border-bottom: 1px solid #e2e5e8;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+        }
+
+        header .user-options {
+            display: flex;
+            align-items: center;
+        }
+
+        header .user-options a {
+            color: var(--primary-color);
+            margin-left: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        header .user-options a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Back button in header */
+        .back-btn {
+            font-size: 18px;
+            margin-right: 20px;
+            cursor: pointer;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn i {
+            margin-right: 8px;
+        }
+
+        /* Sidebar */
+        aside {
+            position: fixed;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            width: var(--expanded-width);
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 20px;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+            z-index: 999;
+        }
+
+        aside.collapsed {
+            width: var(--collapsed-width);
+        }
+
+        aside.collapsed nav ul li a span.text {
+            display: none;
+        }
+
+        aside nav ul {
+            list-style-type: none;
+        }
+
+        aside nav ul li {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        aside nav ul li a {
+            color: var(--white-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            font-size: 14px;
+            background-color: var(--primary-color);
+            border-bottom: 1px solid var(--line-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        aside nav ul li a:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        aside nav ul li a .icon {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        /* Modern Dropdown Design */
+        aside nav ul li:hover .dropdown {
+            display: block;
+        }
+
+        aside nav ul li .dropdown {
+            display: none;
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background-color: var(--dropdown-bg-color);
+            border-radius: 4px;
+            z-index: 998;
+            border: 1px solid var(--dropdown-border-color);
+            transition: all 0.3s ease-in-out;
+        }
+
+        aside nav ul li.active .dropdown {
+            display: block;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: var(--text-color);
+            background-color: var(--white-color);
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-bottom: 1px solid var(--dropdown-border-color);
+        }
+
+        .dropdown a:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        main {
+            margin-left: var(--expanded-width);
+            padding: 80px 20px;
+            min-height: 100vh;
+            background-color: var(--white-color);
+            transition: margin-left 0.3s ease;
+        }
+
+        aside.collapsed + main {
+            margin-left: var(--collapsed-width);
+        }
+
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white-color);
+            border-top: 1px solid #e2e5e8;
+            color: var(--text-color);
+            text-align: center;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        aside.collapsed + footer {
+            margin-left: var(--collapsed-width);
+            width: calc(100% - var(--collapsed-width));
+        }
+
+        /* Buttons */
+        button, .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button:hover, .btn:hover {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            aside {
+                width: var(--collapsed-width);
+            }
+
+            aside.collapsed {
+                width: var(--collapsed-width);
+            }
+
+            aside.collapsed nav ul li a span.text {
+                display: none;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            aside.show {
+                transform: translateX(0);
+            }
+
+            main {
+                margin-left: var(--collapsed-width);
+                padding-top: 80px;
+            }
+
+            footer {
+                width: 100%;
+                margin-left: var(--collapsed-width);
+            }
+        }
+
+        /* Make sidebar scrollable */
+        aside {
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <a href="javascript:history.back()" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+        <div class="hamburger" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></div>
+        <h1>AssetSync</h1>
+        <div class="user-options">
+            <a href="#"><i class="fas fa-bell"></i> Notifications</a>
+            <a href="#"><i class="fas fa-user"></i> {{ request.user.username }}</a>
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn" style="background:none; border:none; color: var(--primary-color); font-size: 16px; cursor: pointer;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+            
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <nav>
+            <ul>
+                <!-- Dashboard Option -->
+                <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <a href="{% url 'dashboard' %}"><i class="fas fa-home icon"></i> <span class="text">Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="#" onclick="toggleDropdown(event)"><i class="fas fa-briefcase icon"></i> <span class="text">Onboarding and exit</span></a>
+                    <div class="dropdown">
+                        <a href="{% url 'add_employee' %}">Add Employee</a>
+                        <a href="{% url 'view_employee' %}">View Employee</a>
+                        <a href="{% url 'exit_employee' %}">Exit Employee</a>
+                        <a href="{% url 'exit_tracker' %}">Exit Tracker</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" onclick="toggleDropdown(event)"><i class="fas fa-briefcase icon"></i> <span class="text">Asset management</span></a>
+                    <div class="dropdown">
+                        <a href="{% url 'add_asset' %}">Add Asset</a>
+                        <a href="{% url 'view_asset' %}">View Asset</a>
+                    </div>
+                </li>
+                <li><a href="{% url 'assign_asset' %}"><i class="fas fa-tools icon"></i> <span class="text">Assign Asset</span></a></li>
+                <li><a href="{% url 'finance_module' %}"><i class="fas fa-dollar-sign icon"></i> <span class="text">Finance Management</span></a></li>
+                <li><a href="{% url 'report' %}"><i class="fas fa-chart-bar icon"></i> <span class="text">Report</span></a></li>
+                <li><a href="{% url 'add_user' %}"><i class="fas fa-user-plus"></i> Add User</a></li>
+            </ul>
+        </nav>
+        <!-- Toggle Button -->
+        <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-angle-left"></i></button>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        <!-- Page-specific content will be injected here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 AssetSync. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function toggleDropdown(event) {
+            event.preventDefault();
+            var parentLi = event.target.closest('li');
+            parentLi.classList.toggle('active');
+        }
+
+        function toggleMobileSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        }
+
+        // Close dropdown when mouse leaves the area
+        document.querySelectorAll('aside nav ul li').forEach(function (li) {
+            li.addEventListener('mouseleave', function () {
+                li.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add Hardware{% endblock %}
+
+{% block content %}
+
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    h2 {
+        color: #01508c; /* Primary color */
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .options-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .options-list li {
+        flex: 1 1 calc(33.333% - 40px); /* Three items per row */
+        max-width: calc(33.333% - 40px);
+    }
+
+    .options-list a {
+        display: block;
+        background-color: #01508c; /* Primary color */
+        color: #fff;
+        font-size: 18px;
+        padding: 15px 20px;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .options-list a:hover {
+        background-color: #ffc814; /* Secondary color on hover */
+        color: #333;
+        transform: translateY(-3px); /* Lift effect on hover */
+    }
+
+    .options-list a:active {
+        background-color: #e6b100; /* Darker yellow on click */
+        transform: translateY(1px); /* Press down effect on click */
+    }
+
+    @media (max-width: 768px) {
+        .options-list li {
+            flex: 1 1 100%; /* Single item per row on small screens */
+        }
+
+        .options-list a {
+            font-size: 16px;
+        }
+    }
+</style>
+
+<div class="container">
+    <ul class="options-list">
+        <li><a href="{% url 'add_laptop' %}">Add Laptop</a></li>
+        <li><a href="{% url 'add_desktop' %}">Add Desktop</a></li>
+        <li><a href="{% url 'add_printer' %}">Add Printer</a></li>
+        <li><a href="{% url 'add_ipad' %}">Add iPad</a></li>
+        <li><a href="{% url 'add_iphone' %}">Add iPhone</a></li>
+        <li><a href="{% url 'add_smartphone' %}">Add Smartphone</a></li>
+        <li><a href="{% url 'add_keypadphone' %}">Add Keypad Phone</a></li>
+    </ul>
+</div>
+
+{% endblock %}

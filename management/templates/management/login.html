@@ -1,0 +1,108 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AssetSync</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .welcome-text {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            display: flex;
+            width: 950px; /* Increased width slightly */
+            height: 450px; /* Increased height slightly */
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .image-container {
+            flex: 1;
+            background: url("{% static 'management/log.png' %}") no-repeat center center;
+            background-size: cover;
+        }
+
+        .login-container {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-container img {
+            display: block;
+            margin: 0 auto 20px;
+            width: 150px; /* Increased size */
+        }
+
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .login-container button {
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #fdd835;
+            border: none;
+            border-radius: 25px; /* Oval shape */
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-container button:hover {
+            background-color: #fbc02d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="welcome-text">Sign in to AssetSync</div>
+    <div class="container">
+        <div class="image-container"></div>
+        <div class="login-container">
+            <img src="{% static 'management/LOGO1.png' %}" alt="Logo">
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="hidden" name="next" value="{{ next }}">
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

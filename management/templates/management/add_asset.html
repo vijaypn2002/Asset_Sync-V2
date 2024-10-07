@@ -1,0 +1,122 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add Asset{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 2.8rem;
+        color: #333;
+        margin-bottom: 40px;
+        letter-spacing: 1px;
+        font-weight: 600;
+        position: relative;
+    }
+
+    h2::after {
+        content: "";
+        width: 80px;
+        height: 3px;
+        background-color: #007bff;
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 5px;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        width: 250px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-align: center;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-icon {
+        font-size: 3rem;
+        color: #ffc107;
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        font-size: 1.6rem;
+        color: #007bff;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .card-description {
+        font-size: 1rem;
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .card a {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
+
+<div class="container">
+    <h2>Add Asset</h2>
+    <div class="card-container">
+        <div class="card">
+            <a href="{% url 'add_hardware' %}">
+                <div class="card-icon">💻</div>
+                <div class="card-title">Hardware</div>
+                <div class="card-description">Add new hardware items like laptops, desktops, or other related equipment.</div>
+            </a>
+        </div>
+        <div class="card">
+            <a href="{% url 'add_accessories' %}">
+                <div class="card-icon">⌨️</div>
+                <div class="card-title">Accessories</div>
+                <div class="card-description">Add accessories such as keyboards, mice, cables, and other peripherals.</div>
+            </a>
+        </div>
+        <div class="card">
+            <a href="{% url 'add_communication_devices' %}">
+                <div class="card-icon">📞</div>
+                <div class="card-title">Communication Devices</div>
+                <div class="card-description">Add communication devices like phones, walkie-talkies, or other tools.</div>
+            </a>
+        </div>
+        <div class="card">
+            <a href="{% url 'add_rental_asset' %}">
+                <div class="card-icon">📦</div>
+                <div class="card-title">Rental Asset</div>
+                <div class="card-description">Add assets available for rent, like projectors or temporary equipment.</div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

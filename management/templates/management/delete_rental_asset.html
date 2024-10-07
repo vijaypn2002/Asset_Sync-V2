@@ -1,0 +1,13 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Delete Rental Asset{% endblock %}
+
+{% block content %}
+<h2>Delete Rental Asset</h2>
+<p>Are you sure you want to delete this rental asset: {{ rental_asset.rental_laptop_brand }} - {{ rental_asset.serial_number }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'view_rental_assets' %}">Cancel</a>
+</form>
+{% endblock %}

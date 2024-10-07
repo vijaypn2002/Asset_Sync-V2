@@ -1,0 +1,11 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Asset Management{% endblock %}
+
+{% block content %}
+<h2>Asset Management</h2>
+<ul>
+    <li><a href="{% url 'add_asset' %}">Add Asset</a></li>
+    <li><a href="{% url 'view_asset' %}">View Asset</a></li>
+</ul>
+{% endblock %}

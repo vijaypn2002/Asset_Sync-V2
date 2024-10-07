@@ -1,0 +1,13 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Delete Desktop{% endblock %}
+
+{% block content %}
+<h2>Delete Desktop</h2>
+<p>Are you sure you want to delete this desktop: {{ desktop.serial_number }} - {{ desktop.brand }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'view_desktops' %}">Cancel</a>
+</form>
+{% endblock %}

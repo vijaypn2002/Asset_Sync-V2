@@ -1,0 +1,382 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Employee & Asset Report{% endblock %}
+
+{% block content %}
+
+<!-- Counter Section with enhanced design -->
+<div class="counter-container">
+    <div class="counter-box" style="background-color: #1a73e8; color: white;">
+        <h3>Total Employees</h3>
+        <p>{{ employees_page_obj.paginator.count }}</p>
+    </div>
+    <div class="counter-box" style="background-color: #d93025; color: white;">
+        <h3>Total Exited Employees</h3>
+        <p>{{ total_exited }}</p>
+    </div>
+    <div class="counter-box" style="background-color: #fbbc05; color: black;">
+        <h3>Total Assets</h3>
+        <p>{{ total_assets_sum }}</p>
+    </div>
+    <div class="counter-box" style="background-color: #34a853; color: white;">
+        <h3>Assigned Assets</h3>
+        <p>{{ assigned_assets_sum }}</p>
+    </div>
+    <div class="counter-box" style="background-color: #1a73e8; color: white;">
+        <h3>Free Assets</h3>
+        <p>{{ free_assets_sum }}</p>
+    </div>
+</div>
+
+<!-- Buttons to toggle different sections -->
+<div class="toggle-buttons-container">
+    <button onclick="showSection('employeeListSection')" class="btn-toggle btn-primary">Employee List</button>
+    <button onclick="showSection('exitedEmployeesSection')" class="btn-toggle btn-danger">Exited Employees</button>
+    <button onclick="showSection('totalAssetsSection')" class="btn-toggle btn-success">Total Assets</button>
+    <button onclick="showSection('freeAssetsSection')" class="btn-toggle btn-warning">Free Assets</button>
+    <button onclick="showSection('assignedAssetsSection')" class="btn-toggle btn-info">Assigned Assets</button>
+</div>
+
+<!-- Export Buttons for each section -->
+<div class="export-buttons-container">
+    <a href="?export=employees" class="btn btn-export">Export Employees</a>
+    <a href="?export=exited_employees" class="btn btn-export">Export Exited Employees</a>
+    <a href="?export=total_assets" class="btn btn-export">Export Total Assets</a>
+    <a href="?export=free_assets" class="btn btn-export">Export Free Assets</a>
+    <a href="?export=assigned_assets" class="btn btn-export">Export Assigned Assets</a>
+</div>
+
+<!-- Employee List Section with Pagination -->
+<div id="employeeListSection" style="display: none;">
+    <h3 class="section-heading" style="color: #333;">Employee List</h3> <!-- Changed heading color to a neutral shade -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered professional-table">
+            <thead class="thead-dark" style="background-color: #333; color: white;"> <!-- Updated table header color -->
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Branch</th>
+                    <th>Work Location</th>
+                    <th>Reporting Officer</th>
+                    <th>Email</th>
+                    <th>Date of Joining</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees_page_obj %}
+                    <tr>
+                        <td>{{ employee.employee_id }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.department }}</td>
+                        <td>{{ employee.designation }}</td>
+                        <td>{{ employee.branch }}</td>
+                        <td>{{ employee.work_location }}</td>
+                        <td>{{ employee.reporting_officer }}</td>
+                        <td>{{ employee.personal_email_id }}</td>
+                        <td>{{ employee.date_of_joining }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="9">No employees found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Pagination for employees -->
+    <div class="pagination-container">
+        <div class="pagination-links">
+            <span>Page {{ employees_page_obj.number }} of {{ employees_page_obj.paginator.num_pages }}</span>
+            <div class="pagination-buttons">
+                {% if employees_page_obj.has_previous %}
+                    <a href="?page={{ employees_page_obj.previous_page_number }}" class="btn btn-light">&laquo; Prev</a>
+                {% endif %}
+                {% if employees_page_obj.has_next %}
+                    <a href="?page={{ employees_page_obj.next_page_number }}" class="btn btn-light">Next &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Exited Employees Section with Pagination -->
+<div id="exitedEmployeesSection" style="display: none;">
+    <h3 class="section-heading" style="color: #d93025;">Exited Employees</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered professional-table">
+            <thead class="thead-dark" style="background-color: #d93025; color: white;">
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Branch</th>
+                    <th>Work Location</th>
+                    <th>Reporting Officer</th>
+                    <th>Email</th>
+                    <th>Date of Exit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in exited_employees_page_obj %}
+                    <tr>
+                        <td>{{ employee.employee_id }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.department }}</td>
+                        <td>{{ employee.designation }}</td>
+                        <td>{{ employee.branch }}</td>
+                        <td>{{ employee.work_location }}</td>
+                        <td>{{ employee.reporting_officer }}</td>
+                        <td>{{ employee.personal_email_id }}</td>
+                        <td>{{ employee.exit_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="9">No exited employees found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Pagination for exited employees -->
+    <div class="pagination-container">
+        <div class="pagination-links">
+            <span>Page {{ exited_employees_page_obj.number }} of {{ exited_employees_page_obj.paginator.num_pages }}</span>
+            <div class="pagination-buttons">
+                {% if exited_employees_page_obj.has_previous %}
+                    <a href="?page={{ exited_employees_page_obj.previous_page_number }}" class="btn btn-light">&laquo; Prev</a>
+                {% endif %}
+                {% if exited_employees_page_obj.has_next %}
+                    <a href="?page={{ exited_employees_page_obj.next_page_number }}" class="btn btn-light">Next &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Total Assets Section -->
+<div id="totalAssetsSection" style="display: none;">
+    <h3 class="section-heading" style="color: #fbbc05;">Total Assets</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered professional-table">
+            <thead class="thead-dark" style="background-color: #fbbc05; color: black;">
+                <tr>
+                    <th>Asset Type</th>
+                    <th>Total Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset_type, count in total_assets.items %}
+                    <tr>
+                        <td>{{ asset_type }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No assets found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Free Assets Section -->
+<div id="freeAssetsSection" style="display: none;">
+    <h3 class="section-heading" style="color: #333;">Free Assets</h3> <!-- Changed color -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered professional-table">
+            <thead class="thead-dark" style="background-color: #333; color: white;"> <!-- Updated color -->
+                <tr>
+                    <th>Asset Type</th>
+                    <th>Free Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset_type, count in free_assets.items %}
+                    <tr>
+                        <td>{{ asset_type }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No free assets found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Assigned Assets Section -->
+<div id="assignedAssetsSection" style="display: none;">
+    <h3 class="section-heading" style="color: #34a853;">Assigned Assets</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered professional-table">
+            <thead class="thead-dark" style="background-color: #34a853; color: white;">
+                <tr>
+                    <th>Asset Type</th>
+                    <th>Assigned Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset_type, count in assigned_assets.items %}
+                    <tr>
+                        <td>{{ asset_type }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No assigned assets found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- JavaScript for toggling sections -->
+<script>
+    function showSection(sectionId) {
+        const sections = ['employeeListSection', 'exitedEmployeesSection', 'totalAssetsSection', 'freeAssetsSection', 'assignedAssetsSection'];
+        sections.forEach(id => {
+            document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+        });
+    }
+
+    // Show the first section (Employee List) by default
+    showSection('employeeListSection');
+</script>
+
+<!-- Enhanced Styling for the Page -->
+<style>
+    /* Counter Styling */
+    .counter-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        gap: 20px;
+    }
+    .counter-box {
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        width: 18%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .counter-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    .counter-box h3 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    .counter-box p {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* Table Styling */
+    .professional-table {
+        font-size: 16px;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .professional-table th, .professional-table td {
+        padding: 15px;
+        text-align: center;
+        border: none;
+    }
+    .professional-table thead {
+        background-color: #4a4a4a;
+        color: white;
+    }
+    .professional-table tbody tr:nth-child(odd) {
+        background-color: #f5f5f5;
+    }
+    .professional-table tbody tr:hover {
+        background-color: #eaeaea;
+        cursor: pointer;
+    }
+
+    /* Button Styling */
+    .btn-toggle, .btn-export {
+        font-size: 16px;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        text-decoration: none;
+        color: white; /* Button text color */
+    }
+
+  /* Remove underline and change color for export buttons */
+.btn-export {
+    background-color: #ffcc00; /* Update the background color */
+    border: none;
+    color: #333; /* Change the text color */
+    text-decoration: none; /* Remove the underline */
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-export:hover {
+    background-color: #e6b800; /* Slightly darker yellow on hover */
+    color: white; /* Change text color on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+    .btn-toggle:hover, .btn-export:hover {
+        background-color: #555;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+    .pagination-buttons a {
+        margin-right: 5px;
+        padding: 10px 15px;
+        background-color: #f5f5f5;
+        color: #333;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pagination-buttons a:hover {
+        background-color: #4a4a4a;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Section Heading */
+    .section-heading {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* Button Container Styling */
+    .toggle-buttons-container, .export-buttons-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+
+{% endblock %}

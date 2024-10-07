@@ -1,0 +1,115 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+<h2>Add User</h2>
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #01508c; /* Primary color */
+        font-size: 28px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    form label {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    form input, form select, form textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background-color: #ffffff;
+        transition: border-color 0.3s ease;
+    }
+
+    form input:focus, form select:focus, form textarea:focus {
+        border-color: #01508c;
+        outline: none;
+    }
+
+    .btn-submit {
+        background-color: #01508c; /* Primary color */
+        color: white;
+        font-size: 18px;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #013a68; /* Darker on hover */
+        transform: translateY(-3px); /* Lift effect on hover */
+    }
+
+    .btn-submit:active {
+        background-color: #011f3c; /* Darker on active */
+        transform: translateY(1px); /* Press down effect on click */
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .errorlist {
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: -10px;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        form input, form select, form textarea {
+            font-size: 14px;
+        }
+
+        .btn-submit {
+            font-size: 16px;
+            padding: 10px;
+        }
+    }
+</style>
+
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-submit">Add User</button>
+    </form>
+</div>
+
+{% endblock %}

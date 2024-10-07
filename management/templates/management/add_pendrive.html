@@ -1,0 +1,140 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add Pendrive{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fb;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #333;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    input, select, textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 0.95rem;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button[type="submit"] {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        margin: 20px auto;
+        padding: 12px;
+        background-color: #004a8f;
+        color: #ffffff;
+        border: none;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #003a6d;
+        transform: translateY(-2px);
+    }
+
+    button[type="submit"]:active {
+        background-color: #002c50;
+        transform: translateY(0);
+    }
+
+    /* Styling for Textarea */
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+</style>
+
+<div class="container">
+    <h2>Add Pendrive</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-grid">
+            <!-- Fields for the Pendrive Information -->
+            <div class="form-group">
+                <label for="date_of_purchase">Date of Purchase:</label>
+                <input type="date" id="date_of_purchase" name="date_of_purchase">
+            </div>
+            <div class="form-group">
+                <label for="brand">Brand:</label>
+                <input type="text" id="brand" name="brand" placeholder="Enter Brand">
+            </div>
+            <div class="form-group">
+                <label for="serial_number">Serial Number:</label>
+                <input type="text" id="serial_number" name="serial_number" placeholder="Enter Serial Number">
+            </div>
+            <div class="form-group">
+                <label for="capacity">Capacity (GB):</label>
+                <input type="number" id="capacity" name="capacity" placeholder="Enter Capacity">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label for="remarks">Remarks:</label>
+                <textarea id="remarks" name="remarks" placeholder="Enter Remarks"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="warranty_details">Warranty Details:</label>
+                <input type="text" id="warranty_details" name="warranty_details" placeholder="Enter Warranty Details">
+            </div>
+            <div class="form-group">
+                <label for="warranty_date">Warranty Expiry Date:</label>
+                <input type="date" id="warranty_date" name="warranty_date">
+            </div>
+            <div class="form-group">
+                <label for="purchased_amount">Purchased Amount:</label>
+                <input type="number" id="purchased_amount" name="purchased_amount" placeholder="Enter Purchased Amount">
+            </div>
+        </div>
+        <button type="submit">Save</button>
+    </form>
+</div>
+{% endblock %}

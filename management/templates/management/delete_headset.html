@@ -1,0 +1,13 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Delete Headset{% endblock %}
+
+{% block content %}
+<h2>Delete Headset</h2>
+<p>Are you sure you want to delete this headset: {{ headset.brand }} - {{ headset.serial_number }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'view_headsets' %}">Cancel</a>
+</form>
+{% endblock %}

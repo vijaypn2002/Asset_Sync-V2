@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            overflow: hidden;
+        }
+
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: #e8491d 3px solid;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            display: block;
+            width: 100%;
+            background: #35424a;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background: #e8491d;
+        }
+
+        .error-messages {
+            background: #f2dede;
+            color: #a94442;
+            padding: 10px;
+            border: 1px solid #ebccd1;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .error-messages ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .error-messages li {
+            margin-bottom: 5px;
+        }
+    </style>
+    <script>
+        function syncDates() {
+            const purchaseDateInput = document.querySelector('input[name="purchase_date"]');
+            const nextPaymentDateInput = document.querySelector('input[name="next_payment_date"]');
+            purchaseDateInput.addEventListener('change', function() {
+                nextPaymentDateInput.value = purchaseDateInput.value;
+            });
+        }
+        document.addEventListener('DOMContentLoaded', syncDates);
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Edit Invoice</h1>
+    </header>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">  <!-- Add enctype="multipart/form-data" -->
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_requested_date">Requested Date:</label>
+                {{ form.requested_date }}
+            </div>
+            <div class="form-group">
+                <label for="id_purchase_date">Purchase Date:</label>
+                {{ form.purchase_date }}
+            </div>
+            <div class="form-group">
+                <label for="id_product">Product:</label>  <!-- New Product field -->
+                {{ form.product }}
+            </div>
+            <div class="form-group">
+                <label for="id_vendor">Vendor:</label>
+                {{ form.vendor }}
+            </div>
+            <div class="form-group">
+                <label for="id_quantity">Quantity:</label>
+                {{ form.quantity }}
+            </div>
+            <div class="form-group">
+                <label for="id_payment_method">Payment Method:</label>
+                {{ form.payment_method }}
+            </div>
+            <div class="form-group">
+                <label for="id_payment_type">Payment Type:</label>
+                {{ form.payment_type }}
+            </div>
+            <div class="form-group">
+                <label for="id_amount">Amount:</label>
+                {{ form.amount }}
+            </div>
+            <div class="form-group">
+                <label for="id_status">Status:</label>
+                {{ form.status }}
+            </div>
+            <div class="form-group">
+                <label for="id_reference_transaction_id">Reference Transaction ID:</label>
+                {{ form.reference_transaction_id }}
+            </div>
+            <div class="form-group">
+                <label for="id_next_payment_date">Next Payment Date:</label>
+                {{ form.next_payment_date }}
+            </div>
+            <div class="form-group">
+                <label for="id_department">Department:</label>
+                {{ form.department }}
+            </div>
+            <div class="form-group">
+                <label for="id_invoice_file">Upload Invoice:</label>
+                {{ form.invoice_file }}
+            </div>
+            <button type="submit">Save</button>
+        </form>
+        <div>
+            {% if form.errors %}
+                <div class="error-messages">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script type="text/javascript"> 
+        function preventBack() { 
+            window.history.forward();  
+        } 
+          
+        setTimeout("preventBack()", 0); 
+          
+        window.onunload = function () { null }; 
+        </script> 
+</body>
+</html>

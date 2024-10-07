@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AssetSync - Welcome</title>
+    {% load static %}
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 90%;
+            max-width: 1000px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-side {
+            flex: 1;
+            background-image: url("{% static 'management/HOME2.gif' %}");
+            background-size: cover; /* Ensure the entire GIF covers the area */
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 300px; /* Keep the minimum height for desktop */
+            max-height: 400px; /* Restrict maximum height for desktop */
+        }
+
+        .content-side {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .company-logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .content-side .app-header {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #0066cc;
+        }
+
+        .content-side .app-description {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #666;
+        }
+
+        .launch-button {
+            display: inline-block;
+            background-color: #fffb09;
+            color: #000000;
+            text-decoration: none;
+            padding: 15px 50px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .launch-button:hover {
+            background-color: #004c99;
+            transform: translateY(-2px);
+            color: #f8f9fa;
+        }
+
+        .launch-button:active {
+            transform: translateY(1px);
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            max-width: 90%;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .chatbot-body {
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f0f8ff;
+        }
+
+        .chatbot-body .message {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: inline-block;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .chatbot-body .message.user {
+            background-color: #0056b3;
+            color: white;
+            margin-left: auto;
+            font-weight: bold;
+        }
+
+        .chatbot-body .message.bot.typing::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin-right: 5px;
+        }
+
+        .chatbot-body .message.bot.typing::after {
+            content: '...';
+            animation: dots 1s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { color: transparent; }
+            40% { color: black; }
+            60% { color: transparent; }
+            80%, 100% { color: black; }
+        }
+
+        .chatbot-footer {
+            background-color: #f0f8ff;
+            padding: 10px;
+            text-align: right;
+        }
+
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .chatbot-question {
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px 0;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+
+        .chatbot-question:hover {
+            background-color: #003d7a;
+        }
+
+        /* Media query for mobile devices */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .image-side {
+                min-height: 250px; /* Adjust height for better visibility on mobile */
+                max-height: 300px; /* Ensure the image is visible and proportional */
+                width: 100%; /* Make sure the image takes full width on mobile */
+                background-size: contain; /* Ensure the GIF is fully visible */
+            }
+
+            .content-side {
+                padding: 30px;
+                text-align: center;
+                align-items: center;
+            }
+
+            .company-logo {
+                width: 120px;
+                margin-bottom: 15px;
+            }
+
+            .content-side .app-header {
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+
+            .content-side .app-description {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+
+            .launch-button {
+                padding: 12px 40px;
+                font-size: 1rem;
+            }
+
+            .chatbot-container {
+                width: 300px;
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body onclick="closeChatbot()">
+
+    <div class="container">
+        <!-- Image Side -->
+        <div class="image-side"></div>
+
+        <!-- Content Side -->
+        <div class="content-side">
+            <!-- Company Logo -->
+            <img src="{% static 'management/LOGO1.png' %}" alt="Company Logo" class="company-logo">
+            
+            <h2 class="app-header">Welcome to AssetSync</h2>
+            <p class="app-description">Manage your assets, onboarding, and exit clearance with ease.</p>
+            <a href="{% url 'dashboard' %}" class="launch-button">Launch AssetSync</a>
+        </div>
+    </div>
+
+    <div class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot(event)">💬</div>
+
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <h3>Chat with us!</h3>
+            <button onclick="toggleChatbot(event)" style="background:none;border:none;color:white;font-size:1.2rem;">✖</button>
+        </div>
+        <div class="chatbot-body" id="chatbot-body">
+            <!-- Messages will appear here -->
+        </div>
+        <div class="chatbot-footer">
+            <button class="chatbot-question" onclick="sendMessage('What is AssetSync?', 'AssetSync is an asset management software developed using Python and Django. It helps you manage employee and asset details efficiently.')">1. What is AssetSync?</button>
+            <button class="chatbot-question" onclick="sendMessage('What are the modules?', '1. Dashboard 2. Onboarding and Exit Clearance 3. Asset Management 4. Finance Management 5. Report 6. Settings')">2. What are the modules?</button>
+            <button class="chatbot-question" onclick="sendMessage('How to use AssetSync?', 'Dashboard: Overview of key metrics and system status. Onboarding and Exit: Add Employee: Add new employee details, or bulk upload employee list with csv file. View Employee: View and manage employee information. Exit Employee: exit employees. Exit Tracker: Track and manage exited employees. Asset Management: Add Asset: Enter new assets into the system , or bulk import asset list with csv file. Add Rental Asset: Add rented assets. View Assets: View and manage all assets. Assign Assets: Assign assets to employees. View Assigned Assets Track assets currently assigned to employees. Finance Module: Manage financial aspects related to assets. Report: Generate reports on assets and employee management. Settings: Manage user roles, permissions, and system configurations.')">3. How to use AssetSync?</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle chatbot visibility
+        function toggleChatbot(event) {
+            event.stopPropagation(); // Prevent closing chatbot when clicking inside it
+            var chatbot = document.getElementById("chatbot");
+            var chatbotToggle = document.getElementById("chatbotToggle");
+
+            if (chatbot.style.display === "none" || chatbot.style.display === "") {
+                chatbot.style.display = "flex";
+                chatbotToggle.style.display = "none";
+            } else {
+                chatbot.style.display = "none";
+                chatbotToggle.style.display = "block";
+            }
+        }
+
+        // Function to simulate sending a message and bot reply with typing effect
+        function sendMessage(question, answer) {
+            var chatbotBody = document.getElementById("chatbot-body");
+
+            // Clear previous chat messages
+            chatbotBody.innerHTML = "";
+
+            // User message
+            var userMessage = document.createElement("div");
+            userMessage.className = "message user";
+            userMessage.textContent = question;
+            chatbotBody.appendChild(userMessage);
+
+            // Scroll to the bottom of the chat
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+
+            // Bot typing simulation
+            var botTyping = document.createElement("div");
+            botTyping.className = "message bot typing";
+            chatbotBody.appendChild(botTyping);
+
+            // Scroll to the bottom of the chat
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+
+            // Bot reply with typing effect
+            setTimeout(function() {
+                botTyping.remove(); // Remove typing indicator
+                var botReply = document.createElement("div");
+                botReply.className = "message bot";
+                typeEffect(botReply, answer);
+                chatbotBody.appendChild(botReply);
+
+                // Scroll to the bottom of the chat
+                chatbotBody.scrollTop = chatbotBody.scrollHeight;
+            }, 1000); // 1 second delay for bot response
+        }
+
+        // Typing effect function
+        function typeEffect(element, text, speed = 50) {
+            let i = 0;
+            (function typing() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typing, speed);
+                }
+            })();
+        }
+
+        // Close chatbot when clicking outside of it
+        function closeChatbot() {
+            var chatbot = document.getElementById("chatbot");
+            var chatbotToggle = document.getElementById("chatbotToggle");
+            chatbot.style.display = "none";
+            chatbotToggle.style.display = "block";
+        }
+
+        // Prevent closing when clicking inside the chatbot
+        document.getElementById("chatbot").onclick = function(event) {
+            event.stopPropagation();
+        };
+    </script>
+
+</body>
+</html>

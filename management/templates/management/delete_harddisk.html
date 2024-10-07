@@ -1,0 +1,13 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Delete Hard Disk{% endblock %}
+
+{% block content %}
+<h2>Delete Hard Disk</h2>
+<p>Are you sure you want to delete this hard disk: {{ harddisk.brand }} - {{ harddisk.serial_number }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'view_harddisks' %}">Cancel</a>
+</form>
+{% endblock %}

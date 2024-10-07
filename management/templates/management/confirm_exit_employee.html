@@ -1,0 +1,14 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Confirm Exit{% endblock %}
+
+{% block content %}
+<h2>Confirm Exit</h2>
+<p>Are you sure you want to exit employee "{{ employee.name }}" ({{ employee.employee_id }})?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Exit Employee</button>
+    <a href="{% url 'exit_employee' %}">No, Cancel</a>
+</form>
+{% endblock %}

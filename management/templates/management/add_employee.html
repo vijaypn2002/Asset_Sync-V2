@@ -1,0 +1,237 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add Employee{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #333333;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+        font-size: 24px;
+    }
+
+    .form-section h4 {
+        font-weight: bold;
+        color: #666666;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 8px;
+        display: block;
+        color: #555555;
+        font-size: 14px;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 14px;
+        color: #333333;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .btn-primary, .btn-secondary {
+        background-color: #0056b3;
+        border-color: #0056b3;
+        border-radius: 5px;
+        width: 100%;
+        font-size: 16px;
+        padding: 10px;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+
+    .btn-secondary {
+        background-color: #ffcc00;
+        border-color: #ffcc00;
+        color: #333333;
+    }
+
+    .btn-primary:hover, .btn-secondary:hover {
+        background-color: #003d80;
+        border-color: #003d80;
+    }
+
+    .alert-info {
+        background-color: #e9f7ff;
+        border-color: #b3e5fc;
+        color: #31708f;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 15px;
+    }
+
+    .file-input {
+        margin-top: 10px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .col-md-4 {
+        flex: 0 0 32%;
+        max-width: 32%;
+        margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            max-width: 100%;
+            padding: 15px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        .form-section h4 {
+            font-size: 16px;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        .form-control {
+            font-size: 16px;
+            padding: 12px;
+        }
+
+        .btn-primary, .btn-secondary {
+            font-size: 18px;
+            padding: 12px;
+        }
+
+        .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .container, .form-control, .btn-primary, .btn-secondary {
+            width: 100%;
+            padding: 15px;
+        }
+    }
+
+    .form-control-file {
+        margin-top: 5px;
+    }
+
+    hr {
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="container">
+    <h2>Add Employee</h2>
+    <div class="form-section">
+        <h4 class="section-title">Personal Information</h4>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    {{ form.date_of_joining.label_tag }}
+                    {{ form.date_of_joining }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ form.employee_id.label_tag }}
+                    {{ form.employee_id }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    {{ form.department.label_tag }}
+                    {{ form.department }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ form.designation.label_tag }}
+                    {{ form.designation }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ form.branch.label_tag }}
+                    {{ form.branch }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    {{ form.work_location.label_tag }}
+                    {{ form.work_location }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ form.reporting_officer.label_tag }}
+                    {{ form.reporting_officer }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ form.personal_email_id.label_tag }}
+                    {{ form.personal_email_id }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="form-section">
+        <h4 class="section-title">Bulk Import</h4>
+        <form method="post" action="{% url 'bulk_import_employees' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group file-input">
+                <input type="file" name="employee_csv" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-secondary">Upload</button>
+        </form>
+    </div>
+
+    {% if messages %}
+        <div class="alert alert-info">
+            <ul class="mb-0">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

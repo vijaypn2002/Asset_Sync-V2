@@ -1,0 +1,196 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Edit Employee{% endblock %}
+
+{% block content %}
+<h2>Edit Employee - {{ employee.name }}</h2>
+
+<style>
+    :root {
+        --primary-color: #01508c;
+        --secondary-color: #ffc814;
+        --light-blue-color: #e9f7ff;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: var(--light-blue-color); /* Light blue background */
+        padding: 30px;
+        border-radius: 10px;
+        color: var(--primary-color); /* Dark blue text */
+    }
+
+    h2 {
+        font-weight: bold;
+        color: var(--primary-color); /* Primary color */
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 26px;
+        text-transform: uppercase;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: block;
+        color: var(--primary-color); /* Primary color for labels */
+        font-size: 16px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid var(--primary-color);
+        padding: 10px;
+        font-size: 15px;
+        color: var(--primary-color); /* Dark blue text in input fields */
+        background-color: #ffffff; /* White background for input */
+        width: 100%;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color); /* Yellow border on focus */
+        outline: none;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color); /* Dark blue button */
+        border-color: var(--primary-color);
+        border-radius: 8px;
+        width: 100%;
+        font-size: 16px;
+        padding: 12px;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 15px;
+    }
+
+    .btn-primary:hover {
+        background-color: #013a68; /* Slightly darker blue on hover */
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-color); /* Yellow button */
+        border-color: var(--secondary-color);
+        color: #333;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        text-align: center;
+        display: block;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e6b100; /* Darker yellow on hover */
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .col-md-4 {
+        flex: 0 0 calc(33.333% - 20px);
+        max-width: calc(33.333% - 20px);
+    }
+
+    @media (max-width: 768px) {
+        .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .btn-secondary {
+            font-size: 14px;
+            padding: 8px 15px;
+        }
+    }
+</style>
+
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="date_of_joining">Date of Joining:</label>
+                <input type="date" id="date_of_joining" name="date_of_joining" class="form-control" value="{{ employee.date_of_joining|date:'Y-m-d' }}">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ employee.name }}">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department" class="form-control" value="{{ employee.department }}">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="designation">Designation:</label>
+                <input type="text" id="designation" name="designation" class="form-control" value="{{ employee.designation }}">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="branch">Branch:</label>
+                <input type="text" id="branch" name="branch" class="form-control" value="{{ employee.branch }}">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="work_location">Work Location:</label>
+                <input type="text" id="work_location" name="work_location" class="form-control" value="{{ employee.work_location }}">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="reporting_officer">Reporting Officer:</label>
+                <input type="text" id="reporting_officer" name="reporting_officer" class="form-control" value="{{ employee.reporting_officer }}">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="personal_email_id">Personal Email ID:</label>
+                <input type="email" id="personal_email_id" name="personal_email_id" class="form-control" value="{{ employee.personal_email_id }}">
+            </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Changes</button>
+    </form>
+
+    <a href="{% url 'view_employee' %}" class="btn-secondary">Back to Employee List</a>
+</div>
+
+{% endblock %}

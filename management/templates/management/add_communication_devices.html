@@ -1,0 +1,71 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Add Communication Devices{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fb;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: center; /* Center aligns cards horizontally */
+        margin-top: 30px;
+    }
+
+    .card {
+        padding: 10px 20px;
+        background: #004a8f; /* Blue background for buttons */
+        border: none;
+        border-radius: 8px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        cursor: pointer;
+        max-width: 200px; /* Reduced width */
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        background-color: #ffc107; /* Yellow background color on hover */
+    }
+
+    .card a {
+        text-decoration: none;
+        color: #ffffff; /* White font color for button text */
+        font-weight: 600;
+        font-size: 1rem;
+        display: block;
+        transition: color 0.3s;
+    }
+
+    .card:hover a {
+        color: #333; /* Darker color on hover to ensure text visibility on yellow background */
+    }
+</style>
+
+<div class="container">
+    <h2>Add Communication Devices</h2>
+    <div class="card-container">
+        <div class="card">
+            <a href="{% url 'add_sim' %}">Add Sim</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

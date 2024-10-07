@@ -1,0 +1,13 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Delete SIM{% endblock %}
+
+{% block content %}
+<h2>Delete SIM</h2>
+<p>Are you sure you want to delete this SIM: {{ sim.sim_number }} - {{ sim.sim_connection }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'view_sims' %}">Cancel</a>
+</form>
+{% endblock %}
