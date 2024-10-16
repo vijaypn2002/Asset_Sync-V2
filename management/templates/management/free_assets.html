@@ -1,94 +1,241 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'management/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Assets</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+{% block title %}Free Assets{% endblock %}
 
-        h2 {
-            text-align: center;
-            color: #007bff;
-            margin-top: 30px;
-        }
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .main-container {
+        display: flex;
+        margin-top: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    /* Styling for the second sidebar */
+    .second-sidebar {
+        width: 160px;
+        background-color: #2c3e50;
+        padding: 15px;
+        color: white;
+        margin-left: 10px;
+        height: auto;
+    }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
+    .second-sidebar h2 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        color: white;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
 
-        th {
-            background-color: #007bff;
-            color: white;
-            text-transform: uppercase;
-        }
+    .second-sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+    .second-sidebar ul li {
+        margin-bottom: 15px;
+    }
 
-        tr:hover {
-            background-color: #eaf4ff;
-        }
+    .second-sidebar ul li a {
+        text-decoration: none;
+        font-size: 1rem;
+        color: #d3d9df;
+        transition: color 0.3s ease;
+    }
 
-        @media (max-width: 768px) {
-            table {
-                font-size: 0.9rem;
-            }
+    .second-sidebar ul li a:hover {
+        color: #007bff;
+    }
 
-            th, td {
-                padding: 10px;
-            }
-        }
-    </style>
-</head>
+    /* Main Content Area */
+    .content-area {
+        margin-left: 10px; /* Reduced margin for the first sidebar */
+        padding: 10px;
+        width: calc(100% - 170px); /* Adjust width accordingly */
+    }
 
-<body>
-    <h2>Free Assets</h2>
-    <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Serial Number</th>
-                    <th>Brand</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Populate the rows dynamically for each free asset -->
-                <!-- Example of a row:
-                <tr>
-                    <td>001</td>
-                    <td>Dell</td>
-                </tr>
-                -->
-            </tbody>
-        </table>
+    .content-area h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    table th, table td {
+        padding: 15px;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #032850;
+        color: white;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    a.assign-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    a.assign-btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination li {
+        list-style: none;
+        margin: 0 5px;
+    }
+
+    .pagination li a {
+        display: block;
+        padding: 8px 12px;
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .pagination li a:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .pagination .current {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+
+<div class="main-container">
+    <!-- Second Sidebar -->
+    <div class="second-sidebar">
+        <h2>Asset Types</h2>
+        <ul>
+            <li><a href="?asset_type=Laptop">Laptops</a></li>
+            <li><a href="?asset_type=Desktop">Desktops</a></li>
+            <li><a href="?asset_type=Printer">Printers</a></li>
+            <li><a href="?asset_type=iPad">iPads</a></li>
+            <li><a href="?asset_type=iPhone">iPhones</a></li>
+            <li><a href="?asset_type=Smartphone">Smartphones</a></li>
+            <li><a href="?asset_type=KeypadPhone">Keypad Phones</a></li>
+            <li><a href="?asset_type=Headset">Headsets</a></li>
+            <li><a href="?asset_type=Keyboard">Keyboards</a></li>
+            <li><a href="?asset_type=Mouse">Mice</a></li>
+            <li><a href="?asset_type=Pendrive">Pendrives</a></li>
+            <li><a href="?asset_type=HardDisk">Hard Disks</a></li>
+            <li><a href="?asset_type=LanAdapter">LAN Adapters</a></li>
+            <li><a href="?asset_type=SIM">SIMs</a></li>
+        </ul>
     </div>
-</body>
 
-</html>
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <h2>{{ asset_type }} Free Assets</h2>
+
+        <!-- Asset List -->
+        <div class="asset-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Serial Number</th>
+                        {% if asset_type == 'SIM' %}
+                            <th>SIM Number</th>
+                            <th>SIM Status</th>
+                        {% elif asset_type == 'iPhone' or asset_type == 'Smartphone' %}
+                            <th>Mobile</th>
+                            <th>IMEI No1</th>
+                            <th>IMEI No2</th>
+                        {% elif asset_type == 'Laptop' or asset_type == 'Desktop' %}
+                            <th>Brand</th>
+                            <th>Processor</th>
+                            <th>RAM</th>
+                            <th>Storage</th>
+                            <th>Inch</th>
+                        {% else %}
+                            <th>Brand</th>
+                        {% endif %}
+                        <th>Date of Purchase</th>
+                        <th>Assign</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for asset in page_obj %}
+                    <tr>
+                        <td>{{ asset.serial_number }}</td>
+                        {% if asset_type == 'SIM' %}
+                            <td>{{ asset.sim_number }}</td>
+                            <td>{{ asset.sim_status }}</td>
+                        {% elif asset_type == 'iPhone' or asset_type == 'Smartphone' %}
+                            <td>{{ asset.mobile }}</td>
+                            <td>{{ asset.imei_no1 }}</td>
+                            <td>{{ asset.imei_no2 }}</td>
+                        {% elif asset_type == 'Laptop' or asset_type == 'Desktop' %}
+                            <td>{{ asset.brand }}</td>
+                            <td>{{ asset.processor }}</td>
+                            <td>{{ asset.ram_capacity }}</td>
+                            <td>{{ asset.storage }}</td>
+                            <td>{{ asset.inch }}</td>
+                        {% else %}
+                            <td>{{ asset.brand }}</td>
+                        {% endif %}
+                        <td>{{ asset.date_of_purchase }}</td>
+                        <td><a href="{% url 'assign_asset_to_employee' asset.id %}?asset_type={{ asset_type }}" class="assign-btn">Assign</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                <li><a href="?page=1&asset_type={{ asset_type }}">First</a></li>
+                <li><a href="?page={{ page_obj.previous_page_number }}&asset_type={{ asset_type }}">Previous</a></li>
+                {% endif %}
+
+                <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}&asset_type={{ asset_type }}">Next</a></li>
+                <li><a href="?page={{ page_obj.paginator.num_pages }}&asset_type={{ asset_type }}">Last</a></li>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

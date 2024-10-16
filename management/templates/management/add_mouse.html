@@ -4,14 +4,9 @@
 
 {% block content %}
 <style>
-    body {
+    .container {
         font-family: 'Poppins', sans-serif;
         background-color: #f8f9fb;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
         max-width: 800px;
         margin: 40px auto;
         padding: 30px;
@@ -20,8 +15,8 @@
         border: 1px solid #e0e0e0;
     }
 
-    h2 {
-        font-size: 2rem;
+    .container h2 {
+        font-size: 1.5rem;
         color: #333;
         font-weight: 600;
         text-align: center;
@@ -40,13 +35,15 @@
         flex-direction: column;
     }
 
-    label {
+    .form-group label {
         font-weight: 500;
         color: #555;
         margin-bottom: 5px;
     }
 
-    input, select, textarea {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -55,7 +52,9 @@
         box-sizing: border-box;
     }
 
-    input:focus, select:focus, textarea:focus {
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
         border-color: #007bff;
         outline: none;
     }
@@ -64,15 +63,13 @@
         display: block;
         width: 100%;
         max-width: 200px;
-        margin: 20px auto;
-        padding: 12px;
-        background-color: #004a8f;
+        background-color: #007bff;
         color: #ffffff;
         border: none;
         border-radius: 25px;
-        font-size: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
+       
+       
+       
         cursor: pointer;
         text-align: center;
         transition: background-color 0.3s, transform 0.3s;
@@ -88,7 +85,6 @@
         transform: translateY(0);
     }
 
-    /* Styling for Textarea */
     textarea {
         resize: vertical;
         min-height: 80px;
@@ -103,19 +99,19 @@
             <!-- Fields for the Mouse Information -->
             <div class="form-group">
                 <label for="date_of_purchase">Date of Purchase:</label>
-                <input type="date" id="date_of_purchase" name="date_of_purchase">
+                <input type="date" id="date_of_purchase" name="date_of_purchase" required>
             </div>
             <div class="form-group">
                 <label for="brand">Brand:</label>
-                <input type="text" id="brand" name="brand" placeholder="Enter Brand">
+                <input type="text" id="brand" name="brand" placeholder="Enter Brand" required>
             </div>
             <div class="form-group">
                 <label for="serial_number">Serial Number:</label>
-                <input type="text" id="serial_number" name="serial_number" placeholder="Enter Serial Number">
+                <input type="text" id="serial_number" name="serial_number" placeholder="Enter Serial Number" required>
             </div>
             <div class="form-group">
                 <label for="mouse_status">Mouse Status:</label>
-                <input type="text" id="mouse_status" name="mouse_status" placeholder="Enter Mouse Status">
+                <input type="text" id="mouse_status" name="mouse_status" placeholder="Enter Mouse Status" required>
             </div>
             <div class="form-group" style="grid-column: span 2;">
                 <label for="remarks">Remarks:</label>
@@ -123,15 +119,15 @@
             </div>
             <div class="form-group">
                 <label for="warranty_details">Warranty Details:</label>
-                <input type="text" id="warranty_details" name="warranty_details" placeholder="Enter Warranty Details">
+                <input type="text" id="warranty_details" name="warranty_details" placeholder="Enter Warranty Details" required>
             </div>
             <div class="form-group">
                 <label for="warranty_date">Warranty Expiry Date:</label>
-                <input type="date" id="warranty_date" name="warranty_date">
+                <input type="date" id="warranty_date" name="warranty_date" required>
             </div>
             <div class="form-group">
                 <label for="purchased_amount">Purchased Amount:</label>
-                <input type="number" id="purchased_amount" name="purchased_amount" placeholder="Enter Purchased Amount">
+                <input type="number" id="purchased_amount" name="purchased_amount" placeholder="Enter Purchased Amount" required>
             </div>
         </div>
         <button type="submit">Save</button>

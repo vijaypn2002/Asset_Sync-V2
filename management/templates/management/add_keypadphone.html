@@ -4,24 +4,19 @@
 
 {% block content %}
 <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f8f9fb; /* Light background for better contrast */
-        margin: 0;
-        padding: 0;
-    }
-
     .container {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fb;
         max-width: 900px;
         margin: 40px auto;
         padding: 30px;
-        background-color: #ffffff; /* White background for the form container */
-        border-radius: 8px; /* Rounded corners for a clean look */
-        border: 1px solid #e0e0e0; /* Light border for better definition */
+        background-color: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
     }
 
-    h2 {
-        font-size: 2rem;
+    .container h2 {
+        font-size: 1.5rem;
         color: #333;
         font-weight: 600;
         text-align: center;
@@ -48,13 +43,15 @@
         flex-direction: column;
     }
 
-    label {
+    .form-group label {
         font-weight: 500;
         color: #555;
         margin-bottom: 5px;
     }
 
-    input, select, textarea {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -63,7 +60,9 @@
         box-sizing: border-box;
     }
 
-    input:focus, select:focus, textarea:focus {
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
         border-color: #007bff;
         outline: none;
     }
@@ -72,15 +71,13 @@
         display: block;
         width: 100%;
         max-width: 200px;
-        margin: 20px auto;
-        padding: 12px;
         background-color: #007bff;
         color: #ffffff;
         border: none;
         border-radius: 25px;
-        font-size: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
+       
+       
+       
         cursor: pointer;
         text-align: center;
         transition: background-color 0.3s, transform 0.3s;
@@ -96,8 +93,7 @@
         transform: translateY(0);
     }
 
-    /* Styling for Textarea */
-    textarea {
+    .form-group textarea {
         resize: vertical;
         min-height: 80px;
     }
@@ -109,42 +105,37 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-grid">
-            <!-- Fields based on Keypad Phone Information -->
             <div class="form-group">
                 <label for="serial_number">Serial Number:</label>
-                <input type="text" id="serial_number" name="serial_number" placeholder="Enter Serial Number">
+                <input type="text" id="serial_number" name="serial_number" placeholder="Enter Serial Number" required>
             </div>
             <div class="form-group">
-                <label for="brand">Brand:</label>
-                <input type="text" id="brand" name="brand" placeholder="Enter Brand (e.g., Nokia, Samsung)">
+                <label for="mobile">Mobile:</label>
+                <input type="text" id="mobile" name="mobile" placeholder="Enter Mobile" required>
             </div>
             <div class="form-group">
-                <label for="model">Model:</label>
-                <input type="text" id="model" name="model" placeholder="Enter Model (e.g., Nokia 3310)">
+                <label for="imei_no1">IMEI No1:</label>
+                <input type="text" id="imei_no1" name="imei_no1" placeholder="Enter IMEI No1" required>
             </div>
             <div class="form-group">
-                <label for="generation">Generation:</label>
-                <input type="text" id="generation" name="generation" placeholder="Enter Generation (if applicable)">
+                <label for="imei_no2">IMEI No2:</label>
+                <input type="text" id="imei_no2" name="imei_no2" placeholder="Enter IMEI No2">
             </div>
             <div class="form-group">
-                <label for="storage">Storage Capacity:</label>
-                <input type="text" id="storage" name="storage" placeholder="Enter Storage Capacity (e.g., 32MB)">
+                <label for="mobile_status">Mobile Status:</label>
+                <input type="text" id="mobile_status" name="mobile_status" placeholder="Enter Mobile Status" required>
             </div>
             <div class="form-group">
-                <label for="screen_size">Screen Size (Inches):</label>
-                <input type="text" id="screen_size" name="screen_size" placeholder="Enter Screen Size">
-            </div>
-            <div class="form-group">
-                <label for="status">Status:</label>
-                <input type="text" id="status" name="status" placeholder="Enter Status (e.g., In Use, In Storage)">
+                <label for="charger">Charger:</label>
+                <input type="checkbox" id="charger" name="charger">
             </div>
             <div class="form-group">
                 <label for="date_of_purchase">Date of Purchase:</label>
-                <input type="date" id="date_of_purchase" name="date_of_purchase">
+                <input type="date" id="date_of_purchase" name="date_of_purchase" required>
             </div>
             <div class="form-group">
                 <label for="purchased_amount">Purchased Amount:</label>
-                <input type="number" id="purchased_amount" name="purchased_amount" placeholder="Enter Amount">
+                <input type="number" id="purchased_amount" name="purchased_amount" placeholder="Enter Purchased Amount" required>
             </div>
             <div class="form-group">
                 <label for="warranty_details">Warranty Details:</label>

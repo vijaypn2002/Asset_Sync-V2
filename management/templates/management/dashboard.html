@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <!-- Charts Section with Different Types -->
+    <!-- Charts Section -->
     <div class="chart-section">
         <!-- Branch-wise Employee Distribution - Bar Chart -->
         <div class="chart-container">
@@ -52,6 +52,18 @@
             <h3 class="chart-title">Assigned Assets by Department (Doughnut)</h3>
             <canvas id="assignedAssetDepartmentDoughnutChart"></canvas>
         </div>
+
+        <!-- New Asset Counts by Type (Bar Chart) -->
+        <div class="chart-container">
+            <h3 class="chart-title">Asset Counts by Type (Bar)</h3>
+            <canvas id="assetCountsBarChart"></canvas>
+        </div>
+
+        <!-- Free Assets by Type (Doughnut Chart) -->
+        <div class="chart-container">
+            <h3 class="chart-title">Free Assets by Type (Doughnut)</h3>
+            <canvas id="freeAssetsDoughnutChart"></canvas>
+        </div>
     </div>
 </div>
 
@@ -72,7 +84,11 @@
     const assignedDepartmentLabels = {{ assigned_department_labels|safe }};
     const assignedDepartmentData = {{ assigned_department_values|safe }};
 
-    // Define a more vibrant color scheme
+    // New Data for Asset Counts by Type and Free Assets
+    const assetTypes = {{ asset_types|safe }};
+    const assetCounts = {{ asset_counts|safe }};
+    const freeAssetsByType = {{ free_assets_by_type|safe }};
+
     const vibrantColors = [
         'rgba(75, 192, 192, 0.8)',
         'rgba(255, 159, 64, 0.8)',
@@ -82,6 +98,7 @@
         'rgba(255, 205, 86, 0.8)',
     ];
 
+    // Existing Chart Configurations
     // Branch-wise Employee Distribution - Bar Chart
     new Chart(document.getElementById('branchEmployeeBarChart'), {
         type: 'bar',
@@ -136,7 +153,7 @@
                 data: branchAssetData,
                 borderColor: 'rgba(54, 162, 235, 0.8)',
                 fill: false,
-                tension: 0.3, // Smooth curves
+                tension: 0.3,
             }]
         },
         options: {
@@ -152,7 +169,7 @@
         }
     });
 
-    // Department-wise Asset Distribution - Lollipop Chart (bar with small dots on top)
+    // Department-wise Asset Distribution - Lollipop Chart
     new Chart(document.getElementById('departmentAssetLollipopChart'), {
         type: 'bar',
         data: {
@@ -189,6 +206,51 @@
             datasets: [{
                 label: 'Assigned Asset Count',
                 data: assignedDepartmentData,
+                backgroundColor: vibrantColors,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // New Asset Counts by Type (Bar Chart)
+    new Chart(document.getElementById('assetCountsBarChart'), {
+        type: 'bar',
+        data: {
+            labels: assetTypes,
+            datasets: [{
+                label: 'Asset Count',
+                data: assetCounts,
+                backgroundColor: vibrantColors,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: '#e0e0e0' } }
+            }
+        }
+    });
+
+    // New Free Assets by Type (Doughnut Chart)
+    new Chart(document.getElementById('freeAssetsDoughnutChart'), {
+        type: 'doughnut',
+        data: {
+            labels: assetTypes,
+            datasets: [{
+                label: 'Free Asset Count',
+                data: freeAssetsByType,
                 backgroundColor: vibrantColors,
                 hoverOffset: 10
             }]
@@ -305,5 +367,3 @@
 </style>
 
 {% endblock %}
-
-"dashboard.html"

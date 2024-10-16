@@ -75,6 +75,13 @@ def settings(request):
 def homepage(request):
     return render(request, 'management/homepage.html')
 
+#####################################################################################
+#########################################################################################
+######################################################################################
+from collections import Counter
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, RentalAsset, Employee
 
 @login_required
 def dashboard(request):
@@ -134,6 +141,29 @@ def dashboard(request):
     total_assets = len(all_assets)
     assigned_assets_count = len(assigned_assets)
 
+    # Asset counts by type
+    asset_types = ['Laptop', 'Desktop', 'Printer', 'iPad', 'iPhone', 'Smartphone', 'KeypadPhone', 'Headset', 'Keyboard', 'Mouse', 'Pendrive', 'HardDisk', 'LanAdapter', 'SIM', 'RentalAsset']
+    asset_counts = [len(laptops), len(desktops), len(printers), len(ipads), len(iphones), len(smartphones), len(keypadphones), len(headsets), len(keyboards), len(mice), len(pendrives), len(harddisks), len(lanadapters), len(sims), len(rental_assets)]
+
+    # Free assets by type
+    free_assets_by_type = [
+        laptops.filter(employee__isnull=True).count(),
+        desktops.filter(employee__isnull=True).count(),
+        printers.filter(employee__isnull=True).count(),
+        ipads.filter(employee__isnull=True).count(),
+        iphones.filter(employee__isnull=True).count(),
+        smartphones.filter(employee__isnull=True).count(),
+        keypadphones.filter(employee__isnull=True).count(),
+        headsets.filter(employee__isnull=True).count(),
+        keyboards.filter(employee__isnull=True).count(),
+        mice.filter(employee__isnull=True).count(),
+        pendrives.filter(employee__isnull=True).count(),
+        harddisks.filter(employee__isnull=True).count(),
+        lanadapters.filter(employee__isnull=True).count(),
+        sims.filter(employee__isnull=True).count(),
+        rental_assets.filter(employee__isnull=True).count(),
+    ]
+
     context = {
         'branch_labels': branch_labels,
         'branch_values': branch_values,
@@ -148,9 +178,15 @@ def dashboard(request):
         'total_employees': total_employees,
         'total_assets': total_assets,
         'assigned_assets_count': assigned_assets_count,
+        'asset_types': asset_types,
+        'asset_counts': asset_counts,
+        'free_assets_by_type': free_assets_by_type,
     }
     return render(request, 'management/dashboard.html', context)
 
+#####################################################################################
+####################################################################################
+##################################################################################
 
 @login_required
 def onboarding_exit_clearance(request):
@@ -547,16 +583,22 @@ def view_iphones(request):
 
 
 
+from django.contrib import messages
+
 @login_required
 def add_iphone(request):
     if request.method == 'POST':
         form = iPhoneForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('view_iphones')
+            messages.success(request, 'iPhone added successfully!')  # Success message
+            return redirect('view_iphones')  # Redirect with correct syntax
     else:
         form = iPhoneForm()
+
     return render(request, 'management/add_iphone.html', {'form': form})
+
+
 
 
 @login_required
@@ -605,9 +647,10 @@ def add_smartphone(request):
         form = SmartphoneForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('view_smartphones')
+            return redirect('view_smartphones')  # Redirect to view smartphones after successful form submission
     else:
         form = SmartphoneForm()
+
     return render(request, 'management/add_smartphone.html', {'form': form})
 
 
@@ -658,10 +701,12 @@ def add_keypadphone(request):
         form = KeypadPhoneForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('view_keypadphones')
+            return redirect('view_keypadphones')  # Redirect to view keypad phones after successful form submission
     else:
         form = KeypadPhoneForm()
+
     return render(request, 'management/add_keypadphone.html', {'form': form})
+
 
 
 @login_required
@@ -817,6 +862,10 @@ def view_mice(request):
 
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import MouseForm
+
 @login_required
 def add_mouse(request):
     if request.method == 'POST':
@@ -826,7 +875,9 @@ def add_mouse(request):
             return redirect('view_mice')
     else:
         form = MouseForm()
+
     return render(request, 'management/add_mouse.html', {'form': form})
+
 
 
 @login_required
@@ -880,6 +931,7 @@ def add_pendrive(request):
     else:
         form = PendriveForm()
     return render(request, 'management/add_pendrive.html', {'form': form})
+
 
 
 @login_required
@@ -976,13 +1028,19 @@ def view_lanadapters(request):
 
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import LanAdapterForm
+
 @login_required
 def add_lanadapter(request):
     if request.method == 'POST':
         form = LanAdapterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('view_lanadapters')
+            return redirect('view_lanadapters')  # Make sure this view exists and is correct
+        else:
+            print(form.errors)  # This will print validation errors to the console
     else:
         form = LanAdapterForm()
     return render(request, 'management/add_lanadapter.html', {'form': form})
@@ -1045,6 +1103,7 @@ def add_sim(request):
     else:
         form = SIMForm()
     return render(request, 'management/add_sim.html', {'form': form})
+
 
 
 @login_required
@@ -1120,50 +1179,489 @@ def delete_rental_asset(request, rental_asset_id):
 
 
 # Asset Assignment Views
+#########################################################################################
+##########################################################################################
+###############################################################################################
+#############################################################################################
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Laptop, Employee, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM
+
+# Asset Assignment Views
 @login_required
 def assign_asset(request):
     return render(request, 'management/assign_asset.html')
 
+from django.shortcuts import render
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM
 
-@login_required
+# A dictionary to map asset types to their corresponding model
+ASSET_MODELS = {
+    'Laptop': Laptop,
+    'Desktop': Desktop,
+    'Printer': Printer,
+    'iPad': iPad,
+    'iPhone': iPhone,
+    'Smartphone': Smartphone,
+    'KeypadPhone': KeypadPhone,
+    'Headset': Headset,
+    'Keyboard': Keyboard,
+    'Mouse': Mouse,
+    'Pendrive': Pendrive,
+    'HardDisk': HardDisk,
+    'LanAdapter': LanAdapter,
+    'SIM': SIM,
+}
+
+# View for Total Assets
+from django.core.paginator import Paginator
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import *
+
 def total_assets(request):
-    assets = Laptop.objects.all()  # Add other asset types as needed
-    return render(request, 'management/total_assets.html', {'assets': assets})
+    asset_type = request.GET.get('asset_type', 'Laptop')
+    brand_filter = request.GET.get('brand', '')
 
+    # Fetch the correct model based on asset type
+    asset_model = {
+        'Laptop': Laptop,
+        'Desktop': Desktop,
+        'Printer': Printer,
+        'iPad': iPad,
+        'iPhone': iPhone,
+        'Smartphone': Smartphone,
+        'KeypadPhone': KeypadPhone,
+        'Headset': Headset,
+        'Keyboard': Keyboard,
+        'Mouse': Mouse,
+        'Pendrive': Pendrive,
+        'HardDisk': HardDisk,
+        'LanAdapter': LanAdapter,
+        'SIM': SIM,
+    }.get(asset_type, Laptop)
+
+    # Check if the model has a brand field
+    has_brand_field = hasattr(asset_model, 'brand')
+
+    # Filter assets by brand if applicable and selected
+    if has_brand_field and brand_filter:
+        assets = asset_model.objects.filter(brand=brand_filter)
+    else:
+        assets = asset_model.objects.all()
+
+    # Collect all unique brands for the filter dropdown if the asset type has a brand field
+    brands = asset_model.objects.values_list('brand', flat=True).distinct() if has_brand_field else []
+
+    # Paginate the results
+    paginator = Paginator(assets, 5)  # Show 5 assets per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'asset_type': asset_type,
+        'brands': brands if has_brand_field else None,  # Only pass brands if available
+        'selected_brand': brand_filter,
+        'page_obj': page_obj,
+    }
+    return render(request, 'management/total_assets.html', context)
+
+
+from django.shortcuts import render
+from .models import Laptop, Desktop, Printer, iPhone, Smartphone, KeypadPhone, SIM  # Add other asset models
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+
+# Helper function to get assets by type
+
+from django.shortcuts import render
+from .models import Laptop, Desktop, Printer, iPhone, Smartphone, KeypadPhone, SIM, Headset, Keyboard, Mouse, Pendrive, HardDisk
+    
+from django.shortcuts import render
+from .models import Laptop, Desktop, Printer, iPhone, Smartphone, KeypadPhone, SIM
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import render
+from .models import Laptop, Desktop, Printer, iPhone, Smartphone, KeypadPhone, SIM, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, iPad  # Add other asset models
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def free_assets(request):
-    assets = Laptop.objects.filter(employee__isnull=True)  # Modify for other assets
-    return render(request, 'management/free_assets.html', {'assets': assets})
+    asset_type = request.GET.get('asset_type', 'Laptop')  # Default to Laptop
+    assets = None
+
+    # Fetch free assets based on asset_type
+    if asset_type == 'Laptop':
+        assets = Laptop.objects.filter(employee__isnull=True)
+    elif asset_type == 'Desktop':
+        assets = Desktop.objects.filter(employee__isnull=True)
+    elif asset_type == 'Printer':
+        assets = Printer.objects.filter(employee__isnull=True)
+    elif asset_type == 'iPhone':
+        assets = iPhone.objects.filter(employee__isnull=True)
+    elif asset_type == 'Smartphone':
+        assets = Smartphone.objects.filter(employee__isnull=True)
+    elif asset_type == 'KeypadPhone':
+        assets = KeypadPhone.objects.filter(employee__isnull=True)
+    elif asset_type == 'SIM':
+        assets = SIM.objects.filter(employee__isnull=True)
+    elif asset_type == 'Headset':
+        assets = Headset.objects.filter(employee__isnull=True)
+    elif asset_type == 'Keyboard':
+        assets = Keyboard.objects.filter(employee__isnull=True)
+    elif asset_type == 'Mouse':
+        assets = Mouse.objects.filter(employee__isnull=True)
+    elif asset_type == 'Pendrive':
+        assets = Pendrive.objects.filter(employee__isnull=True)
+    elif asset_type == 'HardDisk':
+        assets = HardDisk.objects.filter(employee__isnull=True)
+    elif asset_type == 'LanAdapter':
+        assets = LanAdapter.objects.filter(employee__isnull=True)
+    elif asset_type == 'iPad':
+        assets = iPad.objects.filter(employee__isnull=True)
+    else:
+        assets = Laptop.objects.none()  # If no valid asset type, return an empty queryset
+
+    # Pagination
+    paginator = Paginator(assets, 5)  # Show 5 assets per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'asset_type': asset_type,
+        'page_obj': page_obj,
+    }
+    return render(request, 'management/free_assets.html', context)
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
 
 
-@login_required
-def assigned_assets(request):
-    assets = Laptop.objects.filter(employee__isnull=False)  # Modify for other assets
-    return render(request, 'management/assigned_assets.html', {'assets': assets})
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Laptop, Desktop, Smartphone, iPhone  # Import other relevant models
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM  # Import all relevant models
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee  # Ensure Employee model is imported
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee  # Ensure Employee model is imported
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Employee, Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import Http404
+from .models import (
+    Laptop, Desktop, Printer, iPad, iPhone, Smartphone, 
+    KeypadPhone, Headset, Keyboard, Mouse, Pendrive, 
+    HardDisk, LanAdapter, SIM, Employee
+)
+from django.core.paginator import Paginator
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Employee, Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM
 
-
-@login_required
 def assign_asset_to_employee(request, asset_id):
-    asset = Laptop.objects.get(id=asset_id)  # Adjust for asset type
-    employees = Employee.objects.all()
+    asset_type = request.GET.get('asset_type')
+    if not asset_type:
+        raise Http404("Asset type is missing")
 
-    if request.method == "POST":
-        employee_id = request.POST.get("employee_id")
-        employee = Employee.objects.get(id=employee_id)
+    # Asset type mapping
+    asset_model_mapping = {
+        'Laptop': Laptop,
+        'Desktop': Desktop,
+        'Printer': Printer,
+        'iPad': iPad,
+        'iPhone': iPhone,
+        'Smartphone': Smartphone,
+        'KeypadPhone': KeypadPhone,
+        'Headset': Headset,
+        'Keyboard': Keyboard,
+        'Mouse': Mouse,
+        'Pendrive': Pendrive,
+        'HardDisk': HardDisk,
+        'LanAdapter': LanAdapter,
+        'SIM': SIM,
+    }
+
+    # Fetch the correct asset model based on asset_type
+    asset_model = asset_model_mapping.get(asset_type)
+    if not asset_model:
+        raise Http404(f"Asset type '{asset_type}' is not recognized.")
+
+    # Get the asset object by its id
+    asset = get_object_or_404(asset_model, id=asset_id)
+
+    # Fetch all employees who are not exited
+    employees = Employee.objects.filter(exited=False)
+
+    # Apply search filter
+    search_name = request.GET.get('search_name', '')
+    department_filter = request.GET.get('department_filter', '')
+    location_filter = request.GET.get('location_filter', '')
+
+    if search_name:
+        employees = employees.filter(name__icontains=search_name)
+
+    if department_filter:
+        employees = employees.filter(department=department_filter)
+
+    if location_filter:
+        employees = employees.filter(work_location=location_filter)
+
+    # Pagination
+    paginator = Paginator(employees, 30)  # 30 employees per page
+    page_number = request.GET.get('page')
+    employees_page = paginator.get_page(page_number)
+
+    if request.method == 'POST':
+        employee_id = request.POST.get('employee_id')
+        employee = get_object_or_404(Employee, id=employee_id)
         asset.employee = employee
         asset.save()
         return redirect('assigned_assets')
 
-    return render(request, 'management/assign_asset_to_employee.html', {'asset': asset, 'employees': employees})
+    # Pass asset_type and other relevant data to the template
+    return render(request, 'management/assign_asset_to_employee.html', {
+        'asset': asset,
+        'employees': employees_page,
+        'asset_type': asset_type,
+        'search_name': search_name,
+        'department_filter': department_filter,
+        'location_filter': location_filter,
+    })
 
 
-@login_required
-def unassign_asset(request, asset_id):
-    asset = Laptop.objects.get(id=asset_id)  # Adjust for asset type
-    asset.employee = None
-    asset.save()
-    return redirect('assigned_assets')
+from django.db.models import Q
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+import csv
+from django.core.paginator import Paginator
+from django.contrib import messages
+
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+import csv
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, Http404
+from django.db.models import Q
+from django.core.paginator import Paginator
+import csv
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, Http404
+from django.db.models import Q
+from django.core.paginator import Paginator
+import csv
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
+
+def assigned_assets(request):
+    # Gather all assigned assets from each asset model
+    asset_lists = [
+        (Laptop.objects.filter(employee__isnull=False), 'Laptop'),
+        (Desktop.objects.filter(employee__isnull=False), 'Desktop'),
+        (Printer.objects.filter(employee__isnull=False), 'Printer'),
+        (iPad.objects.filter(employee__isnull=False), 'iPad'),
+        (iPhone.objects.filter(employee__isnull=False), 'iPhone'),
+        (Smartphone.objects.filter(employee__isnull=False), 'Smartphone'),
+        (KeypadPhone.objects.filter(employee__isnull=False), 'KeypadPhone'),
+        (Headset.objects.filter(employee__isnull=False), 'Headset'),
+        (Keyboard.objects.filter(employee__isnull=False), 'Keyboard'),
+        (Mouse.objects.filter(employee__isnull=False), 'Mouse'),
+        (Pendrive.objects.filter(employee__isnull=False), 'Pendrive'),
+        (HardDisk.objects.filter(employee__isnull=False), 'HardDisk'),
+        (LanAdapter.objects.filter(employee__isnull=False), 'LanAdapter'),
+        (SIM.objects.filter(employee__isnull=False), 'SIM'),
+    ]
+
+    # Combine all asset querysets into a single list with asset type included
+    assets = []
+    for asset_list, asset_type in asset_lists:
+        for asset in asset_list:
+            asset.asset_type = asset_type  # Add asset type dynamically
+            assets.append(asset)
+
+    # Filter by department and asset type
+    department = request.GET.get('department')
+    asset_type = request.GET.get('asset_type')
+
+    if department:
+        assets = [asset for asset in assets if asset.employee.department == department]
+
+    if asset_type:
+        assets = [asset for asset in assets if asset.asset_type == asset_type]
+
+    # Search by employee name, serial number, or brand
+    search_query = request.GET.get('search')
+    if search_query:
+        assets = [
+            asset for asset in assets if search_query.lower() in asset.employee.name.lower() 
+            or search_query.lower() in asset.serial_number.lower() 
+            or search_query.lower() in asset.brand.lower()
+        ]
+
+    # Pagination setup (show 10 assets per page)
+    paginator = Paginator(assets, 10)  # Show 10 assets per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Export to CSV option
+    if request.GET.get('export'):
+        return export_assigned_assets_csv(assets)
+
+    return render(request, 'management/assigned_assets.html', {
+        'assets': page_obj,
+        'departments': Employee.objects.values_list('department', flat=True).distinct(),
+        'asset_types': ['Laptop', 'Desktop', 'Printer', 'iPad', 'iPhone', 'Smartphone', 'KeypadPhone', 'Headset', 'Keyboard', 'Mouse', 'Pendrive', 'HardDisk', 'LanAdapter', 'SIM'],
+        'search_query': search_query,
+        'department_selected': department,
+        'asset_type_selected': asset_type,
+    })
+
+
+def export_assigned_assets_csv(assets):
+    # Prepare CSV response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="assigned_assets.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Asset Type', 'Serial Number', 'Brand', 'Employee Name', 'Department'])
+
+    for asset in assets:
+        writer.writerow([asset.__class__.__name__, asset.serial_number, asset.brand, asset.employee.name, asset.employee.department])
+
+    return response
+
+
+def unassign_asset(request, asset_id, asset_type):
+    # Based on asset type, get the correct model
+    asset_model_map = {
+        'Laptop': Laptop,
+        'Desktop': Desktop,
+        'Printer': Printer,
+        'iPad': iPad,
+        'iPhone': iPhone,
+        'Smartphone': Smartphone,
+        'KeypadPhone': KeypadPhone,
+        'Headset': Headset,
+        'Keyboard': Keyboard,
+        'Mouse': Mouse,
+        'Pendrive': Pendrive,
+        'HardDisk': HardDisk,
+        'LanAdapter': LanAdapter,
+        'SIM': SIM,
+    }
+
+    model = asset_model_map.get(asset_type)
+
+    if model:
+        asset = get_object_or_404(model, id=asset_id)
+
+        # Confirmation message for unassignment
+        if request.method == "POST":
+            asset.employee = None  # Unassign the asset
+            asset.save()
+            return redirect('assigned_assets')
+
+        return render(request, 'management/confirm_unassign.html', {'asset': asset})
+    else:
+        raise Http404(f"Invalid asset type: {asset_type}")
+
+
+def export_assigned_assets_csv(assets):
+    # Prepare CSV response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="assigned_assets.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Asset Type', 'Serial Number', 'Brand', 'Employee Name', 'Department'])
+
+    for asset in assets:
+        writer.writerow([asset.__class__.__name__, asset.serial_number, asset.brand, asset.employee.name, asset.employee.department])
+
+    return response
+
+
+def unassign_asset(request, asset_id, asset_type):
+    # Based on asset type, get the correct model
+    asset_model_map = {
+        'Laptop': Laptop,
+        'Desktop': Desktop,
+        'Printer': Printer,
+        'iPad': iPad,
+        'iPhone': iPhone,
+        'Smartphone': Smartphone,
+        'KeypadPhone': KeypadPhone,
+        'Headset': Headset,
+        'Keyboard': Keyboard,
+        'Mouse': Mouse,
+        'Pendrive': Pendrive,
+        'HardDisk': HardDisk,
+        'LanAdapter': LanAdapter,
+        'SIM': SIM,
+    }
+
+    model = asset_model_map.get(asset_type)
+
+    if model:
+        asset = get_object_or_404(model, id=asset_id)
+
+        # Confirmation message for unassignment
+        if request.method == "POST":
+            asset.employee = None  # Unassign the asset
+            asset.save()
+            return redirect('assigned_assets')
+
+        return render(request, 'management/confirm_unassign.html', {'asset': asset})
+    else:
+        raise Http404(f"Invalid asset type: {asset_type}")
+
+# Helper function to get assets by type
+def get_assets_by_type(asset_type):
+    if asset_type == 'Laptop':
+        return Laptop.objects.all()
+    elif asset_type == 'Desktop':
+        return Desktop.objects.all()
+    elif asset_type == 'Printer':
+        return Printer.objects.all()
+    elif asset_type == 'iPad':
+        return iPad.objects.all()
+    elif asset_type == 'iPhone':
+        return iPhone.objects.all()
+    elif asset_type == 'Smartphone':
+        return Smartphone.objects.all()
+    elif asset_type == 'KeypadPhone':
+        return KeypadPhone.objects.all()
+    elif asset_type == 'Headset':
+        return Headset.objects.all()
+    elif asset_type == 'Keyboard':
+        return Keyboard.objects.all()
+    elif asset_type == 'Mouse':
+        return Mouse.objects.all()
+    elif asset_type == 'Pendrive':
+        return Pendrive.objects.all()
+    elif asset_type == 'HardDisk':
+        return HardDisk.objects.all()
+    elif asset_type == 'LanAdapter':
+        return LanAdapter.objects.all()
+    elif asset_type == 'SIM':
+        return SIM.objects.all()
+    else:
+        return Laptop.objects.all()  # Default to Laptop
+
+
+###################################################################################################################
+#####################################################################################################################
+########################################################################################################################
+#######################################################################################################################
+
 
 
 # Finance Management and Report Views

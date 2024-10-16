@@ -61,21 +61,18 @@
     button[type="submit"] {
         display: block;
         width: 100%;
-        max-width: 150px;
-        margin: 20px auto;
-        padding: 10px;
-        background-color: #004a8f;
+        max-width: 200px;
+        background-color: #007bff;
         color: #ffffff;
         border: none;
         border-radius: 25px;
-        font-size: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
+       
+       
+       
         cursor: pointer;
         text-align: center;
         transition: background-color 0.3s, transform 0.3s;
     }
-
     button[type="submit"]:hover {
         background-color: #003a6d;
         transform: translateY(-2px);
@@ -86,7 +83,6 @@
         transform: translateY(0);
     }
 
-    /* Styling for Textarea */
     textarea {
         resize: vertical;
         min-height: 80px;
@@ -98,30 +94,55 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-grid">
-            <!-- Fields for Rental Asset Information -->
             <div class="form-group">
-                <label for="asset_name">Asset Name:</label>
-                <input type="text" id="asset_name" name="asset_name" placeholder="Enter Asset Name">
+                {{ form.serial_number.label_tag }}
+                {{ form.serial_number }}
+                {{ form.serial_number.errors }}
             </div>
             <div class="form-group">
-                <label for="rental_company">Rental Company:</label>
-                <input type="text" id="rental_company" name="rental_company" placeholder="Enter Rental Company Name">
+                {{ form.rental_laptop_brand.label_tag }}
+                {{ form.rental_laptop_brand }}
+                {{ form.rental_laptop_brand.errors }}
             </div>
             <div class="form-group">
-                <label for="rental_start_date">Rental Start Date:</label>
-                <input type="date" id="rental_start_date" name="rental_start_date">
+                {{ form.processor.label_tag }}
+                {{ form.processor }}
+                {{ form.processor.errors }}
             </div>
             <div class="form-group">
-                <label for="rental_end_date">Rental End Date:</label>
-                <input type="date" id="rental_end_date" name="rental_end_date">
+                {{ form.ram_capacity.label_tag }}
+                {{ form.ram_capacity }}
+                {{ form.ram_capacity.errors }}
             </div>
             <div class="form-group">
-                <label for="rental_cost">Rental Cost:</label>
-                <input type="text" id="rental_cost" name="rental_cost" placeholder="Enter Rental Cost">
+                {{ form.storage.label_tag }}
+                {{ form.storage }}
+                {{ form.storage.errors }}
+            </div>
+            <div class="form-group">
+                {{ form.inch.label_tag }}
+                {{ form.inch }}
+                {{ form.inch.errors }}
+            </div>
+            <div class="form-group">
+                {{ form.laptop_status.label_tag }}
+                {{ form.laptop_status }}
+                {{ form.laptop_status.errors }}
+            </div>
+            <div class="form-group">
+                {{ form.building_name.label_tag }}
+                {{ form.building_name }}
+                {{ form.building_name.errors }}
+            </div>
+            <div class="form-group">
+                {{ form.date_of_purchase.label_tag }}
+                {{ form.date_of_purchase }}
+                {{ form.date_of_purchase.errors }}
             </div>
             <div class="form-group" style="grid-column: span 2;">
-                <label for="remarks">Remarks:</label>
-                <textarea id="remarks" name="remarks" placeholder="Enter any remarks"></textarea>
+                {{ form.remarks.label_tag }}
+                {{ form.remarks }}
+                {{ form.remarks.errors }}
             </div>
         </div>
         <button type="submit">Save</button>

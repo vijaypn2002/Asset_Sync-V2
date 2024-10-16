@@ -1,92 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'management/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Asset</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #333;
+{% block title %}Assign Asset{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content-area {
+        padding: 50px;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .content-area h2 {
+        font-size: 2.8rem;
+        margin-bottom: 50px;
+        color: #333;
+        text-align: center;
+        position: relative;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    .content-area h2::after {
+        content: '';
+        display: block;
+        width: 100px;
+        height: 4px;
+        background-color: #007bff;
+        margin: 20px auto;
+        border-radius: 5px;
+    }
+
+    /* Card Container */
+    .card-container {
+        display: flex;
+        justify-content: space-around;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    /* Card Styling */
+    .card {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 40px;
+        width: 30%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 123, 255, 0.05);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .card:hover::before {
+        opacity: 1;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        
+        border: 2px solid #032850;
+    }
+
+    .card h3 {
+        font-size: 1.6rem;
+        color: #032850;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+
+    .card p {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 25px;
+    }
+
+    .card a {
+        text-decoration: none;
+        font-size: 1rem;
+        color: #032850;
+        border: 2px solid #032850;
+        padding: 12px 25px;
+        border-radius: 25px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .card a:hover {
+        background-color: #032850;
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Adding subtle animations */
+    .card {
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    .card:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .card:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .card:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(50px);
         }
-
-        .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 90%;
-            max-width: 600px;
+        100% {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        h2 {
-            text-align: center;
-            color: #007bff;
-            font-size: 2rem;
-            margin-bottom: 20px;
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .card {
+            width: calc(50% - 20px);
         }
+    }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
+    @media (max-width: 768px) {
+        .card {
+            width: 100%;
         }
+    }
+</style>
 
-        li {
-            margin: 15px 0;
-        }
-
-        a {
-            text-decoration: none;
-            font-size: 1.2rem;
-            color: #007bff;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        a:hover {
-            color: #0056b3;
-        }
-
-        a i {
-            margin-right: 10px;
-        }
-
-        /* Button styling */
-        a.btn {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 5px;
-            text-align: center;
-            width: fit-content;
-            transition: background-color 0.3s;
-        }
-
-        a.btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <h2>Assign Asset</h2>
-        <ul>
-            <li><a href="{% url 'total_assets' %}"><i class="fas fa-list"></i>Total Assets</a></li>
-            <li><a href="{% url 'free_assets' %}"><i class="fas fa-box-open"></i>Free Assets</a></li>
-            <li><a href="{% url 'assigned_assets' %}"><i class="fas fa-user-check"></i>Assigned Assets</a></li>
-        </ul>
+<div class="content-area">
+    <h2>Assign Asset</h2>
+    <div class="card-container">
+        <div class="card">
+            <h3>Total Assets</h3>
+            <p>View all assets and assign them to employees.</p>
+            <a href="{% url 'total_assets' %}">View Total Assets</a>
+        </div>
+        <div class="card">
+            <h3>Free Assets</h3>
+            <p>View and assign unallocated/free assets to employees.</p>
+            <a href="{% url 'free_assets' %}">View Free Assets</a>
+        </div>
+        <div class="card">
+            <h3>Assigned Assets</h3>
+            <p>View already assigned assets and manage assignments.</p>
+            <a href="{% url 'assigned_assets' %}">View Assigned Assets</a>
+        </div>
     </div>
-</body>
-
-</html>
+</div>
+{% endblock %}

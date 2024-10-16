@@ -61,16 +61,14 @@
     button[type="submit"] {
         display: block;
         width: 100%;
-        max-width: 150px;
-        margin: 20px auto;
-        padding: 10px;
-        background-color: #004a8f;
+        max-width: 200px;
+        background-color: #007bff;
         color: #ffffff;
         border: none;
         border-radius: 25px;
-        font-size: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
+       
+       
+       
         cursor: pointer;
         text-align: center;
         transition: background-color 0.3s, transform 0.3s;
@@ -86,7 +84,6 @@
         transform: translateY(0);
     }
 
-    /* Styling for Textarea */
     textarea {
         resize: vertical;
         min-height: 80px;
@@ -98,26 +95,30 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-grid">
-            <!-- Fields for SIM Information -->
             <div class="form-group">
-                <label for="sim_number">SIM Number:</label>
-                <input type="text" id="sim_number" name="sim_number" placeholder="Enter SIM Number">
+                {{ form.sim_number.label_tag }}
+                {{ form.sim_number }}
+                {{ form.sim_number.errors }}
             </div>
             <div class="form-group">
-                <label for="network_provider">Network Provider:</label>
-                <input type="text" id="network_provider" name="network_provider" placeholder="Enter Network Provider">
+                {{ form.sim_connection.label_tag }}
+                {{ form.sim_connection }}
+                {{ form.sim_connection.errors }}
             </div>
             <div class="form-group">
-                <label for="phone_number">Phone Number:</label>
-                <input type="text" id="phone_number" name="phone_number" placeholder="Enter Phone Number">
+                {{ form.sim_status.label_tag }}
+                {{ form.sim_status }}
+                {{ form.sim_status.errors }}
             </div>
             <div class="form-group">
-                <label for="activation_date">Activation Date:</label>
-                <input type="date" id="activation_date" name="activation_date">
+                {{ form.availability.label_tag }}
+                {{ form.availability }}
+                {{ form.availability.errors }}
             </div>
             <div class="form-group" style="grid-column: span 2;">
-                <label for="remarks">Remarks:</label>
-                <textarea id="remarks" name="remarks" placeholder="Enter any remarks"></textarea>
+                {{ form.remarks.label_tag }}
+                {{ form.remarks }}
+                {{ form.remarks.errors }}
             </div>
         </div>
         <button type="submit">Save</button>

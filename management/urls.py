@@ -103,13 +103,17 @@ urlpatterns = [
     path('edit-rental-asset/<int:rental_asset_id>/', views.edit_rental_asset, name='edit_rental_asset'),
     path('delete-rental-asset/<int:rental_asset_id>/', views.delete_rental_asset, name='delete_rental_asset'),
 
+
+
+
     # Asset Assignment
     path('assign-asset/', views.assign_asset, name='assign_asset'),
     path('assign-asset/total/', views.total_assets, name='total_assets'),
     path('assign-asset/free/', views.free_assets, name='free_assets'),
     path('assign-asset/assigned/', views.assigned_assets, name='assigned_assets'),
+    path('assign-asset/unassign/<int:asset_id>/<str:asset_type>/', views.unassign_asset, name='unassign_asset'),
+    path('assign-asset/export-csv/', views.export_assigned_assets_csv, name='export_assigned_assets_csv'),
     path('assign-asset/assign/<int:asset_id>/', views.assign_asset_to_employee, name='assign_asset_to_employee'),
-    path('assign-asset/unassign/<int:asset_id>/', views.unassign_asset, name='unassign_asset'),
 
     # Finance Management and Reports
     path('finance-management/', views.finance_management, name='finance_management'),

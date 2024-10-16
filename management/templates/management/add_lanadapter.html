@@ -64,15 +64,13 @@
         display: block;
         width: 100%;
         max-width: 200px;
-        margin: 20px auto;
-        padding: 12px;
-        background-color: #004a8f;
+        background-color: #007bff;
         color: #ffffff;
         border: none;
         border-radius: 25px;
-        font-size: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
+       
+       
+       
         cursor: pointer;
         text-align: center;
         transition: background-color 0.3s, transform 0.3s;
@@ -88,7 +86,6 @@
         transform: translateY(0);
     }
 
-    /* Styling for Textarea */
     textarea {
         resize: vertical;
         min-height: 80px;
@@ -100,38 +97,53 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-grid">
-            <!-- Fields for the Lan Adapter Information -->
+            <!-- Dynamic form fields rendering -->
             <div class="form-group">
-                <label for="date_of_purchase">Date of Purchase:</label>
-                <input type="date" id="date_of_purchase" name="date_of_purchase">
+                {{ form.date_of_purchase.label_tag }}
+                {{ form.date_of_purchase }}
+                {{ form.date_of_purchase.errors }}
             </div>
+
             <div class="form-group">
-                <label for="brand">Brand:</label>
-                <input type="text" id="brand" name="brand" placeholder="Enter Brand">
+                {{ form.brand.label_tag }}
+                {{ form.brand }}
+                {{ form.brand.errors }}
             </div>
+
             <div class="form-group">
-                <label for="serial_number">Serial Number:</label>
-                <input type="text" id="serial_number" name="serial_number" placeholder="Enter Serial Number">
+                {{ form.serial_number.label_tag }}
+                {{ form.serial_number }}
+                {{ form.serial_number.errors }}
             </div>
+
             <div class="form-group">
-                <label for="type">Adapter Type:</label>
-                <input type="text" id="type" name="type" placeholder="Enter Adapter Type (e.g., USB, Ethernet)">
+                {{ form.lan_adapter_status.label_tag }}
+                {{ form.lan_adapter_status }}
+                {{ form.lan_adapter_status.errors }}
             </div>
+
             <div class="form-group" style="grid-column: span 2;">
-                <label for="remarks">Remarks:</label>
-                <textarea id="remarks" name="remarks" placeholder="Enter Remarks"></textarea>
+                {{ form.remarks.label_tag }}
+                {{ form.remarks }}
+                {{ form.remarks.errors }}
             </div>
+
             <div class="form-group">
-                <label for="warranty_details">Warranty Details:</label>
-                <input type="text" id="warranty_details" name="warranty_details" placeholder="Enter Warranty Details">
+                {{ form.warranty_details.label_tag }}
+                {{ form.warranty_details }}
+                {{ form.warranty_details.errors }}
             </div>
+
             <div class="form-group">
-                <label for="warranty_date">Warranty Expiry Date:</label>
-                <input type="date" id="warranty_date" name="warranty_date">
+                {{ form.warranty_date.label_tag }}
+                {{ form.warranty_date }}
+                {{ form.warranty_date.errors }}
             </div>
+
             <div class="form-group">
-                <label for="purchased_amount">Purchased Amount:</label>
-                <input type="number" id="purchased_amount" name="purchased_amount" placeholder="Enter Purchased Amount">
+                {{ form.purchased_amount.label_tag }}
+                {{ form.purchased_amount }}
+                {{ form.purchased_amount.errors }}
             </div>
         </div>
         <button type="submit">Save</button>

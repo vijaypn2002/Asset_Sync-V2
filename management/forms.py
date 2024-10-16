@@ -354,12 +354,13 @@ class HardDiskForm(forms.ModelForm):
             'warranty_details': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Warranty Details'}),
             'remarks': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Remarks'}),
         }
+from django import forms
+from .models import LanAdapter
 
-# LanAdapter Form with widgets
+class CustomDateInput(forms.DateInput):
+    input_type = 'date'  # This will ensure the HTML5 date input type is used
+
 class LanAdapterForm(forms.ModelForm):
-    date_of_purchase = forms.DateField(widget=CustomDateInput())
-    warranty_date = forms.DateField(widget=CustomDateInput())
-
     class Meta:
         model = LanAdapter
         fields = [
@@ -373,6 +374,7 @@ class LanAdapterForm(forms.ModelForm):
             'lan_adapter_status': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Status'}),
             'purchased_amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter Purchased Amount'}),
             'warranty_details': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Warranty Details'}),
+            'warranty_date': CustomDateInput(attrs={'class': 'form-control'}),
             'remarks': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Remarks'}),
         }
 
