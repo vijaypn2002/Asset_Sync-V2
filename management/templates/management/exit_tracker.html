@@ -1,6 +1,6 @@
 {% extends 'management/base.html' %}
 
-{% block title %}Exit Tracker{% endblock %}
+{% block title %}Exited Employees{% endblock %}
 
 {% block content %}
 
@@ -80,7 +80,43 @@
         background-color: var(--secondary-color);
     }
 
-    /* Mobile Styles */
+    .pagination {
+        margin: 20px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .pagination .step-links {
+        display: inline-block;
+    }
+
+    .pagination a {
+        color: var(--primary-color);
+        margin: 0 5px;
+        padding: 8px 12px;
+        text-decoration: none;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        background-color: #fff;
+        font-size: 14px;
+    }
+
+    .pagination a:hover {
+        background-color: var(--secondary-color);
+        color: #fff;
+        border: 1px solid var(--secondary-color);
+    }
+
+    .pagination .current {
+        padding: 8px 12px;
+        background-color: var(--primary-color);
+        color: #fff;
+        border-radius: 4px;
+        border: 1px solid var(--primary-color);
+        font-size: 14px;
+    }
+
     @media screen and (max-width: 768px) {
         body {
             padding: 10px;
@@ -102,10 +138,16 @@
         table th, table td {
             padding: 10px 8px;
         }
+
+        .pagination a, .pagination .current {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
     }
 </style>
 
 <h2>Exited Employees</h2>
+
 <div class="table-container">
     <table>
         <thead>
@@ -119,11 +161,11 @@
                 <th>Work Location</th>
                 <th>Reporting Officer</th>
                 <th>Personal Email ID</th>
-                <th>Actions</th> <!-- New column for actions -->
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for employee in exited_employees %}
+            {% for employee in employees %}
             <tr>
                 <td>{{ employee.date_of_joining }}</td>
                 <td>{{ employee.employee_id }}</td>
@@ -148,6 +190,25 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
+
+<!-- Pagination controls -->
+<div class="pagination">
+    <span class="step-links">
+        {% if employees.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ employees.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ employees.number }} of {{ employees.paginator.num_pages }}.
+        </span>
+
+        {% if employees.has_next %}
+            <a href="?page={{ employees.next_page_number }}">next</a>
+            <a href="?page={{ employees.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
 </div>
 
 <script>

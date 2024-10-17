@@ -6,6 +6,8 @@ from django.contrib.auth.views import LoginView, PasswordResetView, LogoutView
 urlpatterns = [
     # Redirect the root URL to the login page
     path('', lambda request: redirect('login'), name='root'),
+    path('search-employee/', views.search_employee, name='search_employee'),
+    path('assigned-employee-assets/<int:employee_id>/', views.assigned_employee_assets, name='assigned_employee_assets'),
 
     # Authentication-related paths
     path('login/', LoginView.as_view(template_name='management/login.html'), name='login'),

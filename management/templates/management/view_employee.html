@@ -114,6 +114,40 @@
         font-size: 14px;
     }
 
+    /* Filter Form Styles */
+    .filter-form {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .filter-form select, .filter-form input {
+        width: 22%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .filter-form button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .filter-form button:hover {
+        background-color: var(--secondary-color);
+        color: #fff;
+    }
+
     /* Mobile Styles */
     @media screen and (max-width: 768px) {
         body {
@@ -141,10 +175,43 @@
             padding: 6px 10px;
             font-size: 12px;
         }
+
+        .filter-form select, .filter-form input {
+            width: 100%;
+        }
     }
 </style>
 
 <h2>Employee List</h2>
+
+<!-- Filter Form -->
+<form method="get" action="{% url 'view_employee' %}" class="filter-form">
+    <select name="department">
+        <option value="">All Departments</option>
+        {% for dept in departments %}
+            <option value="{{ dept }}" {% if request.GET.department == dept %}selected{% endif %}>{{ dept }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="designation">
+        <option value="">All Designations</option>
+        {% for desig in designations %}
+            <option value="{{ desig }}" {% if request.GET.designation == desig %}selected{% endif %}>{{ desig }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="branch">
+        <option value="">All Branches</option>
+        {% for branch in branches %}
+            <option value="{{ branch }}" {% if request.GET.branch == branch %}selected{% endif %}>{{ branch }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search by Name or Employee ID">
+    
+    <button type="submit">Filter</button>
+</form>
+
 <div class="table-container">
     <table>
         <thead>

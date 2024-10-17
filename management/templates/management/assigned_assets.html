@@ -4,67 +4,28 @@
 
 {% block content %}
 <style>
-    /* Targeting the specific container for this page */
     .assigned-assets-container form {
         display: flex;
         justify-content: space-between;
         align-items: center;
         background-color: #fffbfb;
         padding: 10px;
-        border-radius: 0; /* Removed rounding */
-        margin-bottom: 20px; /* Reduced gap between filters and table */
+        margin-bottom: 20px;
     }
 
-    .assigned-assets-container form label {
-        font-size: 0.85rem; /* Smaller label font size */
-        color: #003366;
-        margin-right: 10px;
-    }
-
-    .assigned-assets-container form select,
-    .assigned-assets-container form input {
-        padding: 6px;
-        font-size: 0.8rem; /* Smaller input and select font size */
-        border-radius: 0; /* Removed rounding */
-        border: 1px solid #ccc;
-        width: 160px;
-        margin-right: 15px;
-        background-color: white;
-    }
-
-    .assigned-assets-container form button {
-        padding: 5px 8px;
-        background-color: #003366;
-        color: white;
-        border: none;
-        border-radius: 0; /* Removed rounding */
-        font-size: 0.8rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-left: 5px; /* Added gap between buttons */
-    }
-
-    .assigned-assets-container form button:hover {
-        background-color: #ffcc00;
-        color: #003366;
-    }
-
-    /* Table Section */
     .assigned-assets-container table {
         width: 100%;
-        border-collapse: collapse; /* Ensures no gap between borders */
+        border-collapse: collapse;
         margin-bottom: 20px;
         background-color: #fff;
-        border: 1px solid #ccc; /* Defined solid borders for sharp edges */
+        border: 1px solid #ccc;
     }
 
     .assigned-assets-container th, .assigned-assets-container td {
-        padding: 6px 8px; /* Further reduced padding to make rows smaller */
+        padding: 6px 8px;
         text-align: left;
-        font-size: 0.8rem; /* Reduced font size */
-        width: 16.6%; /* Ensuring equal width for all columns (100% / 6 columns) */
-        word-wrap: break-word; /* Ensures that long words wrap to the next line */
-        border: 1px solid #ccc; /* Square borders around each cell */
+        font-size: 0.8rem;
+        border: 1px solid #ccc;
     }
 
     .assigned-assets-container thead {
@@ -72,78 +33,11 @@
         color: white;
     }
 
-    .assigned-assets-container th {
-        font-weight: 700;
-        text-transform: uppercase;
-    }
-
     .assigned-assets-container tbody tr:nth-child(even) {
         background-color: #f2f2f2;
     }
 
-    .assigned-assets-container tbody tr:nth-child(odd) {
-        background-color: #ffffff;
-    }
-
-    .assigned-assets-container tbody tr:hover {
-        cursor: pointer;
-    }
-
     .assigned-assets-container td {
-        color: #003366;
-    }
-
-    /* Unassign Button */
-    .assigned-assets-container td form button {
-        background-color: #ffcc00;
-        color: #003366;
-        border: none;
-        border-radius: 0; /* Removed rounding */
-        font-weight: 600;
-        padding: 5px 8px; /* Smaller button size */
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .assigned-assets-container td form button:hover {
-        background-color: #003366;
-        color: white;
-    }
-
-    /* Pagination Section */
-    .assigned-assets-container .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 15px;
-    }
-
-    .assigned-assets-container .pagination a {
-        margin: 0 3px;
-        padding: 8px 15px; /* Reduced padding for pagination */
-        text-decoration: none;
-        background-color: #003366;
-        border-radius: 0; /* Removed rounding */
-        color: white;
-        font-size: 0.8rem; /* Smaller font size for pagination */
-        font-weight: bold;
-        transition: background-color 0.3s ease;
-    }
-
-    .assigned-assets-container .pagination a.active {
-        background-color: #ffcc00;
-        color: #003366;
-    }
-
-    .assigned-assets-container .pagination a:hover {
-        background-color: #ffcc00;
-        color: #003366;
-    }
-
-    .assigned-assets-container .pagination span.current {
-        padding: 8px 15px;
-        font-size: 0.8rem; /* Smaller font size for current page */
-        font-weight: bold;
         color: #003366;
     }
 </style>
@@ -183,7 +77,15 @@
                 <th>Asset Type</th>
                 <th>Serial Number</th>
                 <th>Brand</th>
+                <th>Processor</th>
+                <th>RAM</th>
+                <th>Storage</th>
+                <th>Purchase Date</th>
+                <th>Warranty Expiry</th>
+                <th>Status</th>
                 <th>Employee Name</th>
+                <th>Email</th>
+                <th>Designation</th>
                 <th>Department</th>
                 <th>Action</th>
             </tr>
@@ -194,7 +96,15 @@
                 <td>{{ asset.asset_type }}</td>
                 <td>{{ asset.serial_number }}</td>
                 <td>{{ asset.brand }}</td>
+                <td>{{ asset.processor }}</td>
+                <td>{{ asset.ram_capacity }}</td>
+                <td>{{ asset.storage }}</td>
+                <td>{{ asset.date_of_purchase|date:"Y-m-d" }}</td> <!-- Purchase Date -->
+                <td>{{ asset.warranty_date|date:"Y-m-d" }}</td> <!-- Warranty Expiry -->
+                <td>{{ asset.status }}</td>
                 <td>{{ asset.employee.name }}</td>
+                <td>{{ asset.employee.personal_email_id }}</td>
+                <td>{{ asset.employee.designation }}</td>
                 <td>{{ asset.employee.department }}</td>
                 <td>
                     <form method="POST" action="{% url 'unassign_asset' asset.id asset.asset_type %}">
@@ -205,7 +115,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6">No assigned assets found.</td>
+                <td colspan="13">No assigned assets found.</td>
             </tr>
             {% endfor %}
         </tbody>

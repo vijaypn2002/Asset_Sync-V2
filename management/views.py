@@ -210,14 +210,52 @@ def add_employee(request):
         form = EmployeeForm()
     return render(request, 'management/add_employee.html', {'form': form})
 
+from django.db.models import Q  # For complex queries with search
 
 @login_required
 def view_employee(request):
-    employee_list = Employee.objects.all()
+    # Get all active employees
+    employee_list = Employee.objects.filter(exited=False)
+
+    # Get filter values from request
+    department = request.GET.get('department')
+    designation = request.GET.get('designation')
+    branch = request.GET.get('branch')
+    search_query = request.GET.get('search')
+
+    # Apply filters if values are provided
+    if department:
+        employee_list = employee_list.filter(department=department)
+    if designation:
+        employee_list = employee_list.filter(designation=designation)
+    if branch:
+        employee_list = employee_list.filter(branch=branch)
+
+    # Apply search if search_query is provided (search by name or employee ID)
+    if search_query:
+        employee_list = employee_list.filter(
+            Q(name__icontains=search_query) | Q(employee_id__icontains=search_query)
+        )
+
+    # Add pagination
     paginator = Paginator(employee_list, 20)
     page_number = request.GET.get('page')
     employees = paginator.get_page(page_number)
-    return render(request, 'management/view_employee.html', {'employees': employees})
+
+    # Get distinct values for filters (to populate filter options in the template)
+    departments = Employee.objects.values_list('department', flat=True).distinct()
+    designations = Employee.objects.values_list('designation', flat=True).distinct()
+    branches = Employee.objects.values_list('branch', flat=True).distinct()
+
+    # Render template with filters and search functionality
+    context = {
+        'employees': employees,
+        'departments': departments,
+        'designations': designations,
+        'branches': branches,
+    }
+    return render(request, 'management/view_employee.html', context)
+
 
 
 @login_required
@@ -301,28 +339,77 @@ def bulk_import_employees(request):
 
 @login_required
 def exit_employee(request):
+    # Filter only non-exited employees
     employees_list = Employee.objects.filter(exited=False)
-    paginator = Paginator(employees_list, 30)
+
+    # Get filter values from request
+    department = request.GET.get('department')
+    designation = request.GET.get('designation')
+    branch = request.GET.get('branch')
+    search_query = request.GET.get('search')
+
+    # Apply filters if values are provided
+    if department:
+        employees_list = employees_list.filter(department=department)
+    if designation:
+        employees_list = employees_list.filter(designation=designation)
+    if branch:
+        employees_list = employees_list.filter(branch=branch)
+
+    # Apply search if search_query is provided (search by name or employee ID)
+    if search_query:
+        employees_list = employees_list.filter(
+            Q(name__icontains=search_query) | Q(employee_id__icontains=search_query)
+        )
+
+    # Add pagination
+    paginator = Paginator(employees_list, 20)
     page_number = request.GET.get('page')
     employees = paginator.get_page(page_number)
-    return render(request, 'management/exit_employee.html', {'employees': employees})
+
+    # Get distinct values for filters
+    departments = Employee.objects.values_list('department', flat=True).distinct()
+    designations = Employee.objects.values_list('designation', flat=True).distinct()
+    branches = Employee.objects.values_list('branch', flat=True).distinct()
+
+    # Render template with filters and search functionality
+    context = {
+        'employees': employees,
+        'departments': departments,
+        'designations': designations,
+        'branches': branches,
+    }
+    return render(request, 'management/exit_employee.html', context)
+
+
 
 
 @login_required
 def confirm_exit_employee(request, employee_id):
     employee = get_object_or_404(Employee, employee_id=employee_id)
     if request.method == 'POST':
+        # Mark the employee as exited
         employee.exited = True
         employee.save()
         messages.success(request, f"Employee {employee.employee_id} has been exited.")
-        return redirect('exit_employee')
+        return redirect('exit_employee')  # Redirect to the Exit Employee page
     return render(request, 'management/confirm_exit_employee.html', {'employee': employee})
+
 
 
 @login_required
 def exit_tracker(request):
+    # Show only employees who have exited
     exited_employees = Employee.objects.filter(exited=True)
-    return render(request, 'management/exit_tracker.html', {'exited_employees': exited_employees})
+    
+    # Add pagination
+    paginator = Paginator(exited_employees, 20)  # Show 20 employees per page
+    page_number = request.GET.get('page')
+    employees = paginator.get_page(page_number)
+
+    return render(request, 'management/exit_tracker.html', {'employees': employees})
+
+
 
 
 @login_required
@@ -1461,6 +1548,16 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 import csv
 from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
+from .models import Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM, Employee
 
 def assigned_assets(request):
     # Gather all assigned assets from each asset model
@@ -1488,43 +1585,63 @@ def assigned_assets(request):
             asset.asset_type = asset_type  # Add asset type dynamically
             assets.append(asset)
 
-    # Filter by department and asset type
-    department = request.GET.get('department')
-    asset_type = request.GET.get('asset_type')
-
-    if department:
-        assets = [asset for asset in assets if asset.employee.department == department]
-
-    if asset_type:
-        assets = [asset for asset in assets if asset.asset_type == asset_type]
-
-    # Search by employee name, serial number, or brand
-    search_query = request.GET.get('search')
-    if search_query:
-        assets = [
-            asset for asset in assets if search_query.lower() in asset.employee.name.lower() 
-            or search_query.lower() in asset.serial_number.lower() 
-            or search_query.lower() in asset.brand.lower()
-        ]
-
     # Pagination setup (show 10 assets per page)
     paginator = Paginator(assets, 10)  # Show 10 assets per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Export to CSV option
-    if request.GET.get('export'):
-        return export_assigned_assets_csv(assets)
-
     return render(request, 'management/assigned_assets.html', {
         'assets': page_obj,
         'departments': Employee.objects.values_list('department', flat=True).distinct(),
         'asset_types': ['Laptop', 'Desktop', 'Printer', 'iPad', 'iPhone', 'Smartphone', 'KeypadPhone', 'Headset', 'Keyboard', 'Mouse', 'Pendrive', 'HardDisk', 'LanAdapter', 'SIM'],
-        'search_query': search_query,
-        'department_selected': department,
-        'asset_type_selected': asset_type,
     })
 
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Employee, Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM
+
+# Search for employees by name or ID
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+from .models import Employee, Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM
+
+def search_employee(request):
+    query = request.GET.get('query', '')
+    if query:
+        employees = Employee.objects.filter(name__icontains=query) | Employee.objects.filter(employee_id__icontains=query)
+        results = [{'id': emp.id, 'name': emp.name, 'employee_id': emp.employee_id} for emp in employees]
+        return JsonResponse({'results': results})
+    return JsonResponse({'results': []})
+
+from django.core.paginator import Paginator
+
+def assigned_employee_assets(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    assets = []
+
+    asset_models = [Laptop, Desktop, Printer, iPad, iPhone, Smartphone, KeypadPhone, Headset, Keyboard, Mouse, Pendrive, HardDisk, LanAdapter, SIM]
+    for model in asset_models:
+        assigned_assets = model.objects.filter(employee=employee)
+        for asset in assigned_assets:
+            assets.append({
+                'asset_type': model.__name__,
+                'serial_number': asset.serial_number,
+                'brand': asset.brand,
+                'date_of_purchase': asset.date_of_purchase,
+                'warranty_date': asset.warranty_date,
+                'status': asset.status,
+            })
+
+    # Add pagination
+    paginator = Paginator(assets, 5)  # Show 5 assets per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'management/assigned_employee_assets.html', {
+        'employee': employee,
+        'page_obj': page_obj,
+    })
 
 def export_assigned_assets_csv(assets):
     # Prepare CSV response

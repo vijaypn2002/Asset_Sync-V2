@@ -74,6 +74,43 @@
             color: var(--secondary-color);
         }
 
+        /* Search Box */
+        .search-box {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .search-box input[type="text"] {
+            padding: 8px;
+            font-size: 14px;
+            width: 250px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            background-color: white;
+          
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .search-results li {
+            padding: 8px;
+            list-style: none;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-results li:hover {
+            background-color: #f1f1f1;
+        }
+
         /* Back button in header */
         .back-btn {
             font-size: 18px;
@@ -283,6 +320,11 @@
         <div class="hamburger" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></div>
         <h1>AssetSync</h1>
         <div class="user-options">
+            <!-- Search Box -->
+            <div class="search-box">
+                <input type="text" id="employeeSearch" placeholder="Search Employee by Name or ID" oninput="searchEmployee()">
+                <ul class="search-results" id="searchResults"></ul>
+            </div>
             <a href="#"><i class="fas fa-bell"></i> Notifications</a>
             <a href="#"><i class="fas fa-user"></i> {{ request.user.username }}</a>
             <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:inline;">
@@ -291,7 +333,6 @@
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
             </form>
-            
         </div>
     </header>
 
@@ -358,13 +399,33 @@
             sidebar.classList.toggle('show');
         }
 
-        // Close dropdown when mouse leaves the area
-        document.querySelectorAll('aside nav ul li').forEach(function (li) {
-            li.addEventListener('mouseleave', function () {
-                li.classList.remove('active');
-            });
-        });
+        // Employee search functionality
+        function searchEmployee() {
+            var query = document.getElementById('employeeSearch').value;
+
+            if (query.length < 3) {
+                document.getElementById('searchResults').innerHTML = '';
+                return;
+            }
+
+            fetch(`/search-employee/?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    var results = data.results;
+                    var resultHTML = '';
+                    results.forEach(employee => {
+                        resultHTML += `<li onclick="redirectToEmployee(${employee.id})">${employee.name} - ${employee.employee_id}</li>`;
+                    });
+                    document.getElementById('searchResults').innerHTML = resultHTML;
+                });
+        }
+
+        function redirectToEmployee(employeeID) {
+            window.location.href = `/assigned-employee-assets/${employeeID}/`;
+        }
+
     </script>
+
 </body>
 
 </html>

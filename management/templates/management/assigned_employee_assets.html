@@ -1,0 +1,188 @@
+{% extends 'management/base.html' %}
+
+{% block title %}Assigned Assets for {{ employee.name }}{% endblock %}
+
+{% block content %}
+    <style>
+        .employee-details {
+            background-color: #f4f9fd;
+            border: 1px solid #e2e5e8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+          
+        }
+
+        .employee-details h2 {
+            font-size: 24px;
+            color: #01508c;
+            margin-bottom: 15px;
+        }
+
+        .employee-details p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .employee-details strong {
+            color: #01508c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+           
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #01508c;
+            color: white;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        table td {
+            background-color: #f9fbfd;
+            color: #333;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+
+        table tr:hover {
+            background-color: #f0f8ff;
+        }
+
+        .no-assets {
+            text-align: center;
+            font-size: 16px;
+            color: #01508c;
+            padding: 20px;
+        }
+
+        .no-assets strong {
+            color: #ff6b6b;
+        }
+
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            color: #01508c;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .pagination a:hover {
+            background-color: #01508c;
+            color: white;
+        }
+
+        .pagination .current {
+            background-color: #01508c;
+            color: white;
+            border-radius: 4px;
+            padding: 8px 12px;
+            border: 1px solid #01508c;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            table th, table td {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .employee-details {
+                padding: 15px;
+            }
+
+            .employee-details p {
+                font-size: 14px;
+            }
+        }
+    </style>
+
+    <div class="employee-details">
+        <h2>Assigned Assets for {{ employee.name }}</h2>
+        <p><strong>ID:</strong> {{ employee.employee_id }}</p>
+        <p><strong>Department:</strong> {{ employee.department }}</p>
+        <p><strong>Designation:</strong> {{ employee.designation }}</p>
+        <p><strong>Branch:</strong> {{ employee.branch }}</p>
+    </div>
+
+    <h3>Assigned Assets:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Asset Type</th>
+                <th>Serial Number</th>
+                <th>Brand</th>
+                <th>Date of Purchase</th>
+                <th>Warranty Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asset in page_obj %}
+            <tr>
+                <td>{{ asset.asset_type }}</td>
+                <td>{{ asset.serial_number }}</td>
+                <td>{{ asset.brand }}</td>
+                <td>{{ asset.date_of_purchase }}</td>
+                <td>{{ asset.warranty_date }}</td>
+                <td>{{ asset.status }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="no-assets">
+                    <strong>No assets assigned</strong> to this employee.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <li><a href="?page=1">First</a></li>
+            <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="current">{{ num }}</li>
+            {% else %}
+                <li><a href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li><a href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+        {% endif %}
+    </div>
+{% endblock %}
